@@ -1,4 +1,4 @@
-import 'package:caffe_app/features/authentication/sign_up/second_screen.dart';
+import 'package:caffe_app/features/authentication/sign_up/first_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -13,10 +13,11 @@ class CaffeApp extends StatelessWidget {
     return MaterialApp(
       title: 'Caffe App',
       theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
         primaryColor: const Color(0xFFE9435A),
         useMaterial3: true,
       ),
-      home: const SecondScreen(),
+      home: const FirstScreen(),
     );
   }
 }

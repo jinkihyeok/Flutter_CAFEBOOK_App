@@ -1,10 +1,17 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/authentication/sign_up/second_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
 class FirstScreen extends StatelessWidget {
   const FirstScreen({super.key});
+
+  void _onStartTap(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const SecondScreen(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,14 +42,8 @@ class FirstScreen extends StatelessWidget {
                 ),
               ),
               Gaps.v20,
-              const Text('느낌있는 멘트가',
-                  style: TextStyle(
-                    fontSize: Sizes.size28,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
-                  )),
               const Text(
-                '들어갈 자리',
+                '느낌있는 멘트가\n들어갈 자리',
                 style: TextStyle(
                   fontSize: Sizes.size28,
                   fontWeight: FontWeight.w600,
@@ -50,10 +51,13 @@ class FirstScreen extends StatelessWidget {
                 ),
               ),
               const Expanded(child: SizedBox()),
-              AuthButton(
-                text: "시작하기",
-                color: Colors.white,
-                backgroundColor: Theme.of(context).primaryColor,
+              GestureDetector(
+                onTap: () => _onStartTap(context),
+                child: AuthButton(
+                  text: "시작하기",
+                  color: Colors.white,
+                  backgroundColor: Theme.of(context).primaryColor,
+                ),
               ),
             ],
           ),

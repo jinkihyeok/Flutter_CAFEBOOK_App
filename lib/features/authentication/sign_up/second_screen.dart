@@ -1,10 +1,17 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/authentication/sign_up/username_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
 class SecondScreen extends StatelessWidget {
   const SecondScreen({super.key});
+
+  void _onEmailTap(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const UserNameScreen(),
+    ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +69,13 @@ class SecondScreen extends StatelessWidget {
               color: Colors.white.withOpacity(0.7),
             ),
             Gaps.v28,
-            const AuthButton(
-              text: '이메일로 계속하기',
-              color: Colors.black,
-              backgroundColor: Colors.white,
+            GestureDetector(
+              onTap: () => _onEmailTap(context),
+              child: AuthButton(
+                text: '이메일로 계속하기',
+                color: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
             ),
           ],
         )),
