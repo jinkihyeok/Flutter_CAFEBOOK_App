@@ -12,21 +12,21 @@ class FirstScreen extends StatelessWidget {
       body: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: Sizes.size28,
+          horizontal: Sizes.size20,
           vertical: Sizes.size32,
         ),
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/background.jpg'),
+            image: AssetImage('assets/images/background_image.jpg'),
             fit: BoxFit.cover,
           ),
         ),
-        child: const SafeArea(
+        child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Gaps.v80,
-              Text(
+              const Text(
                 'SENECA',
                 style: TextStyle(
                   fontSize: Sizes.size32,
@@ -35,13 +35,13 @@ class FirstScreen extends StatelessWidget {
                 ),
               ),
               Gaps.v20,
-              Text('느낌있는 멘트가',
+              const Text('느낌있는 멘트가',
                   style: TextStyle(
                     fontSize: Sizes.size28,
                     fontWeight: FontWeight.w600,
                     color: Colors.white,
                   )),
-              Text(
+              const Text(
                 '들어갈 자리',
                 style: TextStyle(
                   fontSize: Sizes.size28,
@@ -49,8 +49,12 @@ class FirstScreen extends StatelessWidget {
                   color: Colors.white,
                 ),
               ),
-              Expanded(child: SizedBox()),
-              AuthButton(text: "시작하기"),
+              const Expanded(child: SizedBox()),
+              AuthButton(
+                text: "시작하기",
+                color: Colors.white,
+                backgroundColor: Theme.of(context).primaryColor,
+              ),
             ],
           ),
         ),
