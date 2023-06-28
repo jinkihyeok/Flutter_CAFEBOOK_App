@@ -35,6 +35,11 @@ class _UserNameScreenState extends State<UserNameScreen> {
     FocusScope.of(context).unfocus();
   }
 
+  bool _isKoreanInput() {
+    final koreanRegExp = RegExp(r'[ㄱ-ㅎ가-힣]');
+    return koreanRegExp.hasMatch(_username);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -65,6 +70,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
                 Gaps.v16,
                 TextField(
                   controller: _userNameController,
+                  maxLength: _isKoreanInput() ? 8 : 20,
                   decoration: InputDecoration(
                       hintText: '이름 또는 닉네임',
                       focusedBorder: UnderlineInputBorder(

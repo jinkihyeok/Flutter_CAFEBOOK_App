@@ -1,6 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/auth_number_screen.dart';
+import 'package:caffe_app/features/authentication/sign_up/username_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -52,7 +52,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const AuthNumberScreen(),
+        builder: (context) => const UserNameScreen(),
       ),
     );
   }
@@ -88,6 +88,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                 Gaps.v16,
                 TextField(
                   controller: _passwordController,
+                  keyboardType: TextInputType.text,
                   autocorrect: false,
                   obscureText: _obscureText,
                   decoration: InputDecoration(
@@ -133,7 +134,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           : FontAwesomeIcons.check,
                       size: Sizes.size16,
                       color: _isPasswordLengthValid()
-                          ? Colors.blue
+                          ? Colors.green
                           : Colors.grey.shade400,
                     ),
                     Gaps.h6,
@@ -142,7 +143,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       style: TextStyle(
                         fontSize: Sizes.size16,
                         color: _isPasswordLengthValid()
-                            ? Colors.blue
+                            ? Colors.green
                             : Colors.grey.shade400,
                       ),
                     ),
@@ -157,7 +158,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                           : FontAwesomeIcons.check,
                       size: Sizes.size16,
                       color: _isPasswordValid()
-                          ? Colors.blue
+                          ? Colors.green
                           : Colors.grey.shade400,
                     ),
                     Gaps.h6,
@@ -166,7 +167,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       style: TextStyle(
                         fontSize: Sizes.size16,
                         color: _isPasswordValid()
-                            ? Colors.blue
+                            ? Colors.green
                             : Colors.grey.shade400,
                       ),
                     ),

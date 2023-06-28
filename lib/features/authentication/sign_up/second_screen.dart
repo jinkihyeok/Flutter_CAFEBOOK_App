@@ -1,6 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/email_screen.dart';
+import 'package:caffe_app/features/authentication/sign_up/login_form_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +9,7 @@ class SecondScreen extends StatelessWidget {
 
   void _onEmailTap(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const EmailScreen(),
+      builder: (context) => const LoginFormScreen(),
     ));
   }
 

@@ -60,7 +60,9 @@ class _EmailScreenState extends State<EmailScreen> {
       child: Scaffold(
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+            padding: const EdgeInsets.symmetric(
+              horizontal: Sizes.size20,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -78,13 +80,14 @@ class _EmailScreenState extends State<EmailScreen> {
                   keyboardType: TextInputType.emailAddress,
                   autocorrect: false,
                   decoration: InputDecoration(
-                      hintText: 'email@address.com',
-                      errorText: _isEmailValid(),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      )),
+                    hintText: 'email@address.com',
+                    errorText: _isEmailValid(),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
                   cursorColor: Theme.of(context).primaryColor,
                 ),
                 Gaps.v28,
