@@ -41,13 +41,16 @@ class AuthButton extends StatelessWidget {
                   child: icon,
                 ),
               ),
-            Text(
-              text,
-              textAlign: TextAlign.center,
+            AnimatedDefaultTextStyle(
+              duration: const Duration(milliseconds: 150),
               style: TextStyle(
                 color: color,
                 fontSize: Sizes.size20,
                 fontWeight: FontWeight.w600,
+              ),
+              child: Text(
+                text,
+                textAlign: TextAlign.center,
               ),
             ),
           ],
