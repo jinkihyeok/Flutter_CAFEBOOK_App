@@ -38,9 +38,12 @@ class _AuthNumberScreenState extends State<AuthNumberScreen> {
 
   void _onNextTap() {
     if (_authnumber.isEmpty) return;
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const PasswordScreen(),
-    ));
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const PasswordScreen(),
+      ),
+      (route) => false,
+    );
   }
 
   String? _isAuthNumberValid() {
@@ -56,13 +59,25 @@ class _AuthNumberScreenState extends State<AuthNumberScreen> {
     return GestureDetector(
       onTap: _onScafoldTap,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gaps.v80,
+                Gaps.v40,
                 const Text(
                   '이메일 인증',
                   style: TextStyle(
@@ -85,14 +100,14 @@ class _AuthNumberScreenState extends State<AuthNumberScreen> {
                   maxLength: 4,
                   obscureText: true,
                   decoration: InputDecoration(
-                      hintText: '인증번호',
-                      errorText: _isAuthNumberValid(),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      )),
-                  cursorColor: Theme.of(context).primaryColor,
+                    hintText: '인증번호',
+                    errorText: _isAuthNumberValid(),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
                 ),
                 Gaps.v28,
                 GestureDetector(

@@ -71,10 +71,10 @@ class SecondScreen extends StatelessWidget {
               Gaps.v28,
               GestureDetector(
                 onTap: () => _onEmailTap(context),
-                child: AuthButton(
+                child: const AuthButton(
                   text: '이메일로 계속하기',
                   color: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Color(0xFF051010),
                 ),
               ),
             ],

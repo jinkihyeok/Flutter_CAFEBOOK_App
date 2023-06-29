@@ -58,6 +58,18 @@ class _EmailScreenState extends State<EmailScreen> {
     return GestureDetector(
       onTap: _onScafoldTap,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -66,7 +78,7 @@ class _EmailScreenState extends State<EmailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gaps.v80,
+                Gaps.v40,
                 const Text(
                   '이메일 주소를\n입력해주세요.',
                   style: TextStyle(
@@ -88,7 +100,6 @@ class _EmailScreenState extends State<EmailScreen> {
                       ),
                     ),
                   ),
-                  cursorColor: Theme.of(context).primaryColor,
                 ),
                 Gaps.v28,
                 GestureDetector(

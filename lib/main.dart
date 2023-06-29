@@ -1,4 +1,4 @@
-import 'package:caffe_app/features/authentication/sign_up/login_form_screen.dart';
+import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,9 +15,12 @@ class CaffeApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
         primaryColor: const Color(0xFFE9435A),
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.black,
+        ),
         useMaterial3: true,
       ),
-      home: const LoginFormScreen(),
+      home: const HomeScreen(),
     );
   }
 }

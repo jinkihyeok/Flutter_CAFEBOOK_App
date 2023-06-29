@@ -1,5 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/authentication/sign_up/email_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -25,11 +26,20 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         print(formData);
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const HomeScreen(),
-        ));
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+          (route) => false,
+        );
       }
     }
+  }
+
+  void _onSignUpTap() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const EmailScreen(),
+    ));
   }
 
   _emailValidator(String? value) {
@@ -61,6 +71,18 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
     return GestureDetector(
       onTap: _onScafoldTap,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -69,7 +91,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gaps.v80,
+                Gaps.v32,
                 const Text(
                   '이메일 주소를\n입력해주세요.',
                   style: TextStyle(
@@ -78,15 +100,18 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   ),
                 ),
                 Gaps.v14,
-                const Row(
+                Row(
                   children: [
-                    Text('아직 회원이 아니시라면?'),
+                    const Text('아직 회원이 아니시라면?'),
                     Gaps.h5,
-                    Text(
-                      '가입하기',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w600,
+                    GestureDetector(
+                      onTap: _onSignUpTap,
+                      child: const Text(
+                        '가입하기',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -99,7 +124,6 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                       TextFormField(
                         keyboardType: TextInputType.emailAddress,
                         autocorrect: false,
-                        cursorColor: Theme.of(context).primaryColor,
                         decoration: InputDecoration(
                           hintText: 'email@address.com',
                           focusedBorder: UnderlineInputBorder(
@@ -118,7 +142,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                       Gaps.v16,
                       TextFormField(
                         keyboardType: TextInputType.text,
-                        cursorColor: Theme.of(context).primaryColor,
+                        obscureText: true,
                         decoration: InputDecoration(
                           hintText: '비밀번호',
                           focusedBorder: UnderlineInputBorder(

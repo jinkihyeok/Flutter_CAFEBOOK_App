@@ -50,10 +50,11 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   void _onSubmitTap() {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
-    Navigator.of(context).push(
+    Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => const UserNameScreen(),
       ),
+      (route) => false,
     );
   }
 
@@ -71,6 +72,7 @@ class _PasswordScreenState extends State<PasswordScreen> {
     return GestureDetector(
       onTap: _onScafoldTap,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
@@ -123,7 +125,6 @@ class _PasswordScreenState extends State<PasswordScreen> {
                       ),
                     ),
                   ),
-                  cursorColor: Theme.of(context).primaryColor,
                 ),
                 Gaps.v14,
                 Row(

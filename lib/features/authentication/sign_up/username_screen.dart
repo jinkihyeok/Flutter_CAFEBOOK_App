@@ -1,6 +1,7 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
+import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class UserNameScreen extends StatefulWidget {
@@ -35,6 +36,16 @@ class _UserNameScreenState extends State<UserNameScreen> {
     FocusScope.of(context).unfocus();
   }
 
+  void _onNextTap() {
+    if (_username.isEmpty) return;
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+      (route) => false,
+    );
+  }
+
   bool _isKoreanInput() {
     final koreanRegExp = RegExp(r'[ㄱ-ㅎ가-힣]');
     return koreanRegExp.hasMatch(_username);
@@ -45,6 +56,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
     return GestureDetector(
       onTap: _onScafoldTap,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
@@ -78,16 +90,18 @@ class _UserNameScreenState extends State<UserNameScreen> {
                           color: Theme.of(context).primaryColor,
                         ),
                       )),
-                  cursorColor: Theme.of(context).primaryColor,
                 ),
                 Gaps.v28,
-                AuthButton(
-                  text: '시작하기',
-                  backgroundColor: _username.isEmpty
-                      ? Colors.grey.shade300
-                      : Theme.of(context).primaryColor,
-                  color:
-                      _username.isEmpty ? Colors.grey.shade400 : Colors.white,
+                GestureDetector(
+                  onTap: _onNextTap,
+                  child: AuthButton(
+                    text: '시작하기',
+                    backgroundColor: _username.isEmpty
+                        ? Colors.grey.shade300
+                        : Theme.of(context).primaryColor,
+                    color:
+                        _username.isEmpty ? Colors.grey.shade400 : Colors.white,
+                  ),
                 ),
               ],
             ),
