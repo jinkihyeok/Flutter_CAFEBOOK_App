@@ -1,5 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/home/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -18,20 +19,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final TextEditingController _textEditingController = TextEditingController();
-
-  void _onSearchChanged(String value) {}
-
-  void _onSearchSubmitted(String value) {}
-
   void _onTabBarTap(int index) {
     FocusScope.of(context).unfocus();
   }
 
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
+  void _onSearchBarTap(BuildContext context) async {
+    await showCupertinoModalPopup(
+      context: context,
+      builder: (context) => const SearchScreen(),
+    );
   }
 
   @override
@@ -46,21 +42,33 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               children: [
                 Expanded(
-                  child: CupertinoSearchTextField(
-                    controller: _textEditingController,
-                    onChanged: _onSearchChanged,
-                    onSubmitted: _onSearchSubmitted,
-                    placeholder: '검색',
-                    itemColor: Colors.black,
-                    itemSize: Sizes.size24,
-                    padding: const EdgeInsets.all(Sizes.size12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border.all(
-                        color: Colors.black54,
-                        width: 1,
+                  child: GestureDetector(
+                    onTap: () => _onSearchBarTap(context),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Sizes.size14,
+                        vertical: Sizes.size8,
                       ),
-                      borderRadius: BorderRadius.circular(Sizes.size20),
+                      decoration: BoxDecoration(
+                        border: Border.all(),
+                        borderRadius: BorderRadius.circular(Sizes.size20),
+                      ),
+                      child: const Row(
+                        children: [
+                          FaIcon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            size: Sizes.size16,
+                          ),
+                          Gaps.h5,
+                          Text(
+                            '검색',
+                            style: TextStyle(
+                              fontSize: Sizes.size20,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
