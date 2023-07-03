@@ -67,6 +67,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Future<void> _onRefresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -141,24 +145,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: TabBarView(
           children: [
-            GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.size20,
-                vertical: Sizes.size16,
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 1,
-                mainAxisSpacing: Sizes.size10,
-                childAspectRatio: 1,
-              ),
-              findChildIndexCallback: (key) => null,
-              itemCount: _itemCount,
-              controller: _scrollController,
-              itemBuilder: (context, index) => const Column(
-                children: [
-                  SignatureImage(),
-                  SignatureDescription(),
-                ],
+            RefreshIndicator(
+              color: Colors.black,
+              onRefresh: _onRefresh,
+              child: GridView.builder(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Sizes.size20,
+                  vertical: Sizes.size16,
+                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 1,
+                  mainAxisSpacing: Sizes.size10,
+                  childAspectRatio: 1,
+                ),
+                findChildIndexCallback: (key) => null,
+                itemCount: _itemCount,
+                controller: _scrollController,
+                itemBuilder: (context, index) => const Column(
+                  children: [
+                    SignatureImage(),
+                    SignatureDescription(),
+                  ],
+                ),
               ),
             ),
             Tab(text: tabs[1]),
