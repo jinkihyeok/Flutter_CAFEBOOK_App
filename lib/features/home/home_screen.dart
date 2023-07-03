@@ -2,6 +2,8 @@ import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/home/search_screen.dart';
 import 'package:caffe_app/features/home/setting_bar_screen.dart';
+import 'package:caffe_app/features/home/widgets/signature_description.dart';
+import 'package:caffe_app/features/home/widgets/signature_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -152,80 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
               findChildIndexCallback: (key) => null,
               itemCount: _itemCount,
               controller: _scrollController,
-              itemBuilder: (context, index) => Column(
+              itemBuilder: (context, index) => const Column(
                 children: [
-                  Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(Sizes.size8),
-                    ),
-                    child: AspectRatio(
-                      aspectRatio: 1.5,
-                      child: FadeInImage.assetNetwork(
-                        fit: BoxFit.cover,
-                        placeholder: "assets/images/background_image.jpg",
-                        image:
-                            "https://search.pstatic.net/common/?src=https%3A%2F%2Fldb-phinf.pstatic.net%2F20230318_39%2F1679104703292HUfgW_JPEG%2FKakaoTalk_20230317_132200432_20.jpg",
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(Sizes.size16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const DefaultTextStyle(
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: Sizes.size16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  '모멘도르',
-                                ),
-                              ),
-                              FaIcon(
-                                FontAwesomeIcons.solidStar,
-                                size: Sizes.size12,
-                              ),
-                              Gaps.h3,
-                              Text(
-                                '4.5',
-                              ),
-                            ],
-                          ),
-                        ),
-                        Gaps.v8,
-                        DefaultTextStyle(
-                          style: TextStyle(
-                            fontSize: Sizes.size14,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.grey.shade500,
-                          ),
-                          child: const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '지정면',
-                              ),
-                              Text(
-                                '15km 거리',
-                              ),
-                              Text(
-                                '10:00 ~ 21:00 (매주 화 휴무)',
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  SignatureImage(),
+                  SignatureDescription(),
                 ],
               ),
             ),
