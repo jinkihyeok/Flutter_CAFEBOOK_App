@@ -82,6 +82,7 @@ class _SearchScreenState extends State<SearchScreen> {
         ),
         body: Scrollbar(
           child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             child: Container(
               margin: const EdgeInsets.symmetric(
                 horizontal: Sizes.size32,

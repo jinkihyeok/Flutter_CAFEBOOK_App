@@ -1,4 +1,4 @@
-import 'package:caffe_app/features/home/home_screen.dart';
+import 'package:caffe_app/features/authentication/sign_up/agree_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -20,7 +20,7 @@ class CaffeApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const AgreeScreen(),
     );
   }
 }
