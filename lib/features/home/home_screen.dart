@@ -21,9 +21,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   int _itemCount = 10;
   final ScrollController _scrollController = ScrollController();
+
+  bool _showBarrier = false;
+
+  late final AnimationController _animationController = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 200),
+  );
+
+  late final Animation<Offset> _settingBarAnimation = Tween(
+    begin: const Offset(1, 0),
+    end: Offset.zero,
+  ).animate(_animationController);
+
+  late final Animation<Color?> _barrierAnimation = ColorTween(
+    begin: Colors.transparent,
+    end: Colors.black38,
+  ).animate(_animationController);
 
   @override
   void initState() {
@@ -58,13 +76,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _onSettingBarTap(BuildContext context) async {
-    await showDialog(
-      useSafeArea: false,
-      barrierColor: Colors.transparent,
-      context: context,
-      builder: (context) => const SettingBarScreen(),
-    );
+  void _onSettingBarTap() {
+    _animationController.forward();
+
+    setState(() {
+      _showBarrier = !_showBarrier;
+    });
+  }
+
+  void _onSettingBarClose() async {
+    await _animationController.reverse();
+
+    setState(() {
+      _showBarrier = !_showBarrier;
+    });
   }
 
   Future<void> _onRefresh() async {
@@ -75,104 +100,118 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: tabs.length,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          title: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.size10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => _onSearchBarTap(context),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: Sizes.size14,
-                        vertical: Sizes.size8,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(Sizes.size20),
-                      ),
-                      child: const Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.magnifyingGlass,
-                            size: Sizes.size16,
-                          ),
-                          Gaps.h5,
-                          Text(
-                            '검색',
-                            style: TextStyle(
-                              fontSize: Sizes.size20,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Gaps.h16,
-                GestureDetector(
-                  onTap: () => _onSettingBarTap(context),
-                  child: const SizedBox(
-                    child: FaIcon(
-                      FontAwesomeIcons.bars,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          bottom: TabBar(
-            onTap: _onTabBarTap,
-            padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
-            labelStyle: const TextStyle(
-              fontSize: Sizes.size16,
-              fontWeight: FontWeight.w600,
-            ),
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey.shade500,
-            indicatorColor: Colors.black,
-            indicatorWeight: 1.2,
-            indicatorSize: TabBarIndicatorSize.tab,
-            splashFactory: NoSplash.splashFactory,
-            tabs: [
-              for (final tab in tabs) Tab(text: tab),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            RefreshIndicator(
-              color: Colors.black,
-              onRefresh: _onRefresh,
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: Sizes.size20,
-                  vertical: Sizes.size16,
-                ),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 1,
-                  mainAxisSpacing: Sizes.size10,
-                  childAspectRatio: 1,
-                ),
-                findChildIndexCallback: (key) => null,
-                itemCount: _itemCount,
-                controller: _scrollController,
-                itemBuilder: (context, index) => const Column(
+      child: Stack(
+        children: [
+          Scaffold(
+            resizeToAvoidBottomInset: false,
+            appBar: AppBar(
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.size10),
+                child: Row(
                   children: [
-                    SignatureImage(),
-                    SignatureDescription(),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => _onSearchBarTap(context),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Sizes.size14,
+                            vertical: Sizes.size8,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(Sizes.size20),
+                          ),
+                          child: const Row(
+                            children: [
+                              FaIcon(
+                                FontAwesomeIcons.magnifyingGlass,
+                                size: Sizes.size16,
+                              ),
+                              Gaps.h5,
+                              Text(
+                                '검색',
+                                style: TextStyle(
+                                  fontSize: Sizes.size20,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Gaps.h16,
+                    GestureDetector(
+                      onTap: _onSettingBarTap,
+                      child: const SizedBox(
+                        child: FaIcon(
+                          FontAwesomeIcons.bars,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
+              bottom: TabBar(
+                onTap: _onTabBarTap,
+                padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+                labelStyle: const TextStyle(
+                  fontSize: Sizes.size16,
+                  fontWeight: FontWeight.w600,
+                ),
+                labelColor: Colors.black,
+                unselectedLabelColor: Colors.grey.shade500,
+                indicatorColor: Colors.black,
+                indicatorWeight: 1.2,
+                indicatorSize: TabBarIndicatorSize.tab,
+                splashFactory: NoSplash.splashFactory,
+                tabs: [
+                  for (final tab in tabs) Tab(text: tab),
+                ],
+              ),
             ),
-            Tab(text: tabs[1]),
-            Tab(text: tabs[2]),
-          ],
-        ),
+            body: TabBarView(
+              children: [
+                RefreshIndicator(
+                  color: Colors.black,
+                  onRefresh: _onRefresh,
+                  child: GridView.builder(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size20,
+                      vertical: Sizes.size16,
+                    ),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      mainAxisSpacing: Sizes.size10,
+                      childAspectRatio: 1,
+                    ),
+                    findChildIndexCallback: (key) => null,
+                    itemCount: _itemCount,
+                    controller: _scrollController,
+                    itemBuilder: (context, index) => const Column(
+                      children: [
+                        SignatureImage(),
+                        SignatureDescription(),
+                      ],
+                    ),
+                  ),
+                ),
+                Tab(text: tabs[1]),
+                Tab(text: tabs[2]),
+              ],
+            ),
+          ),
+          if (_showBarrier)
+            AnimatedModalBarrier(
+              color: _barrierAnimation,
+              onDismiss: _onSettingBarClose,
+            ),
+          SlideTransition(
+            position: _settingBarAnimation,
+            child: SettingBarScreen(close: _onSettingBarClose),
+          ),
+        ],
       ),
     );
   }

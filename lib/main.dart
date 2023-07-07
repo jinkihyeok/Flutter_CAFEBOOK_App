@@ -1,4 +1,4 @@
-import 'package:caffe_app/features/authentication/sign_up/agree_screen.dart';
+import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -18,9 +18,11 @@ class CaffeApp extends StatelessWidget {
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.black,
         ),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
         useMaterial3: true,
       ),
-      home: const AgreeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
