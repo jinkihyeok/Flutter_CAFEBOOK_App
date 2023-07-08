@@ -202,6 +202,48 @@ class _HomeScreenState extends State<HomeScreen>
               ],
             ),
           ),
+          Positioned(
+            bottom: Sizes.size44,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizes.size20,
+                    vertical: Sizes.size10,
+                  ),
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(12),
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.map,
+                        color: Colors.white,
+                        size: Sizes.size14,
+                      ),
+                      Gaps.h8,
+                      Text(
+                        '지도',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Sizes.size18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           if (_showBarrier)
             AnimatedModalBarrier(
               color: _barrierAnimation,

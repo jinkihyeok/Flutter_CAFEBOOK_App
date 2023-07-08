@@ -171,33 +171,43 @@ class _SearchScreenState extends State<SearchScreen> {
           elevation: 0,
           color: Colors.transparent,
           child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
-                ),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  FaIcon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.white,
-                    size: Sizes.size16,
+            padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizes.size20,
+                    vertical: Sizes.size10,
                   ),
-                  Gaps.h8,
-                  Text(
-                    '검색',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: Sizes.size20,
+                  decoration: const BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(16),
                     ),
                   ),
-                ],
-              ),
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FaIcon(
+                        FontAwesomeIcons.magnifyingGlass,
+                        color: Colors.white,
+                        size: Sizes.size16,
+                      ),
+                      Gaps.h8,
+                      Text(
+                        '검색',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: Sizes.size20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
