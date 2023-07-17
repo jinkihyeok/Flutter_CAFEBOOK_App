@@ -71,15 +71,15 @@ class SettingBarScreen extends StatelessWidget {
                   color: Colors.grey[400],
                 ),
                 Gaps.v20,
-                const DefaultTextStyle(
-                  style: TextStyle(
+                DefaultTextStyle(
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: Sizes.size16,
                     fontWeight: FontWeight.w600,
                   ),
                   child: Column(
                     children: [
-                      Row(
+                      const Row(
                         children: [
                           FaIcon(
                             FontAwesomeIcons.heart,
@@ -90,15 +90,24 @@ class SettingBarScreen extends StatelessWidget {
                         ],
                       ),
                       Gaps.v20,
-                      Row(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.gear,
-                            size: Sizes.size20,
-                          ),
-                          Gaps.h14,
-                          Text('설정'),
-                        ],
+                      GestureDetector(
+                        onTap: () => showAboutDialog(
+                            context: context,
+                            applicationVersion: "1.0.0",
+                            applicationIcon: const FlutterLogo(),
+                            applicationLegalese: "© 2023 Caffe App",
+                            children: const [
+                              Text("Caffe App은 Flutter를 이용하여 제작된 앱입니다."),
+                            ]),
+                        child: const Row(
+                          children: [
+                            FlutterLogo(
+                              size: Sizes.size20,
+                            ),
+                            Gaps.h14,
+                            Text('About'),
+                          ],
+                        ),
                       ),
                     ],
                   ),
