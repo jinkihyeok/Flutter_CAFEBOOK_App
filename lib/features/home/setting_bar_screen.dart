@@ -1,5 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -74,7 +75,7 @@ class SettingBarScreen extends StatelessWidget {
                 DefaultTextStyle(
                   style: const TextStyle(
                     color: Colors.black,
-                    fontSize: Sizes.size16,
+                    fontSize: Sizes.size18,
                     fontWeight: FontWeight.w600,
                   ),
                   child: Column(
@@ -106,6 +107,39 @@ class SettingBarScreen extends StatelessWidget {
                             ),
                             Gaps.h14,
                             Text('About'),
+                          ],
+                        ),
+                      ),
+                      Gaps.v20,
+                      GestureDetector(
+                        onTap: () {
+                          showCupertinoDialog(
+                            context: context,
+                            builder: (context) => CupertinoAlertDialog(
+                              title: const Text('로그아웃'),
+                              content: const Text('로그아웃 하시겠습니까?'),
+                              actions: [
+                                CupertinoDialogAction(
+                                  child: const Text('취소'),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                                CupertinoDialogAction(
+                                  isDestructiveAction: true,
+                                  child: const Text('확인'),
+                                  onPressed: () => Navigator.pop(context),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        child: const Row(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.arrowRotateLeft,
+                              size: Sizes.size20,
+                            ),
+                            Gaps.h14,
+                            Text('로그아웃'),
                           ],
                         ),
                       ),
