@@ -4,6 +4,7 @@ import 'package:caffe_app/features/authentication/sign_up/email_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginFormScreen extends StatefulWidget {
   const LoginFormScreen({super.key});
@@ -25,13 +26,8 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
     if (_formKey.currentState != null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-        print(formData);
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (route) => false,
-        );
+
+        context.goNamed(HomeScreen.routeName);
       }
     }
   }
@@ -98,23 +94,6 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                     fontSize: Sizes.size28,
                     fontWeight: FontWeight.w700,
                   ),
-                ),
-                Gaps.v14,
-                Row(
-                  children: [
-                    const Text('아직 회원이 아니시라면?'),
-                    Gaps.h5,
-                    GestureDetector(
-                      onTap: _onSignUpTap,
-                      child: const Text(
-                        '가입하기',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
                 ),
                 Gaps.v16,
                 Form(
@@ -184,6 +163,24 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                     color: Colors.white,
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
+                ),
+                Gaps.v14,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text('아직 회원이 아니시라면?'),
+                    Gaps.h5,
+                    GestureDetector(
+                      onTap: _onSignUpTap,
+                      child: const Text(
+                        '가입하기',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -5,12 +5,16 @@ import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
 class SecondScreen extends StatelessWidget {
+  static const routeName = 'secondScreen';
+  static const routeURL = '/second';
   const SecondScreen({super.key});
 
   void _onEmailTap(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const LoginFormScreen(),
-    ));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginFormScreen(),
+      ),
+    );
   }
 
   @override

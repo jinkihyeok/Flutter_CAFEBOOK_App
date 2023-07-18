@@ -5,7 +5,8 @@ import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
 class AuthNumberScreen extends StatefulWidget {
-  const AuthNumberScreen({super.key});
+  final String email;
+  const AuthNumberScreen({super.key, required this.email});
 
   @override
   State<AuthNumberScreen> createState() => _AuthNumberScreenState();
@@ -38,11 +39,10 @@ class _AuthNumberScreenState extends State<AuthNumberScreen> {
 
   void _onNextTap() {
     if (_authnumber.isEmpty) return;
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const PasswordScreen(),
       ),
-      (route) => false,
     );
   }
 
@@ -86,9 +86,9 @@ class _AuthNumberScreenState extends State<AuthNumberScreen> {
                   ),
                 ),
                 Gaps.v10,
-                const Text(
-                  'email@address.com 이메일 주소로 발송된\n4자리 숫자를 입력해주세요.',
-                  style: TextStyle(
+                Text(
+                  '${widget.email} 이메일 주소로 발송된\n4자리 숫자를 입력해주세요.',
+                  style: const TextStyle(
                     fontSize: Sizes.size16,
                     color: Colors.black54,
                   ),

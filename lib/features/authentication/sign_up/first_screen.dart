@@ -3,14 +3,15 @@ import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/sign_up/second_screen.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class FirstScreen extends StatelessWidget {
+  static const routeName = 'firstScreen';
+  static const routeURL = '/';
   const FirstScreen({super.key});
 
   void _onStartTap(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const SecondScreen(),
-    ));
+    context.pushNamed(SecondScreen.routeName);
   }
 
   @override

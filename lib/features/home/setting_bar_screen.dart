@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingBarScreen extends StatelessWidget {
+  static const routeURL = '/setting';
+  static const routeName = 'settingBarScreen';
   final Function close;
 
   const SettingBarScreen({super.key, required this.close});

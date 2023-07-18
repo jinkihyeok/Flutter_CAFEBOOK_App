@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class PasswordScreen extends StatefulWidget {
+  static const routeName = 'passwordScreen';
+  static const routeURL = '/password';
   const PasswordScreen({super.key});
 
   @override
@@ -50,11 +52,10 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   void _onSubmitTap() {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
-    Navigator.of(context).pushAndRemoveUntil(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const UserNameScreen(),
       ),
-      (route) => false,
     );
   }
 

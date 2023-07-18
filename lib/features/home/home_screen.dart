@@ -15,6 +15,9 @@ final tabs = [
 ];
 
 class HomeScreen extends StatefulWidget {
+  static const routeURL = '/home';
+  static const routeName = 'homeScreen';
+
   const HomeScreen({super.key});
 
   @override

@@ -48,9 +48,11 @@ class _EmailScreenState extends State<EmailScreen> {
 
   void _onSubmitTap() {
     if (_email.isEmpty || _isEmailValid() != null) return;
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const AuthNumberScreen(),
-    ));
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AuthNumberScreen(email: _email),
+      ),
+    );
   }
 
   @override

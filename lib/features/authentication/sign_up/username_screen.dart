@@ -3,6 +3,7 @@ import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
 import 'package:caffe_app/features/home/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class UserNameScreen extends StatefulWidget {
   const UserNameScreen({super.key});
@@ -38,12 +39,7 @@ class _UserNameScreenState extends State<UserNameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-      (route) => false,
-    );
+    context.goNamed(HomeScreen.routeName);
   }
 
   bool _isKoreanInput() {
