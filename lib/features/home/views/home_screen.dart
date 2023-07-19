@@ -1,12 +1,14 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/home/search_screen.dart';
-import 'package:caffe_app/features/home/setting_bar_screen.dart';
-import 'package:caffe_app/features/home/widgets/signature_description.dart';
-import 'package:caffe_app/features/home/widgets/signature_image.dart';
+import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
+import 'package:caffe_app/features/home/views/search_screen.dart';
+import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
+import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
+import 'package:caffe_app/features/home/views/widgets/signature_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 
 final tabs = [
   "인기순",
@@ -97,6 +99,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 1));
+  }
+
+  void _onDetailTap() {
+    context.pushNamed(
+      DetailScreen.routeName,
+      pathParameters: {
+        'placeId': "1",
+      },
+    );
   }
 
   @override
@@ -192,11 +203,14 @@ class _HomeScreenState extends State<HomeScreen>
                     findChildIndexCallback: (key) => null,
                     itemCount: _itemCount,
                     controller: _scrollController,
-                    itemBuilder: (context, index) => const Column(
-                      children: [
-                        SignatureImage(),
-                        SignatureDescription(),
-                      ],
+                    itemBuilder: (context, index) => GestureDetector(
+                      onTap: _onDetailTap,
+                      child: const Column(
+                        children: [
+                          SignatureImage(),
+                          SignatureDescription(),
+                        ],
+                      ),
                     ),
                   ),
                 ),

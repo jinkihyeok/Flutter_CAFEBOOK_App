@@ -1,7 +1,7 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/login_form_screen.dart';
-import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
+import 'package:caffe_app/features/authentication/views/login_form_screen.dart';
+import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
 class SecondScreen extends StatelessWidget {

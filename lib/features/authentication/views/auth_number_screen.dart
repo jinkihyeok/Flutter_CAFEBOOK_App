@@ -1,58 +1,57 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/auth_number_screen.dart';
-import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
+import 'package:caffe_app/features/authentication/views/password_screen.dart';
+import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 
-class EmailScreen extends StatefulWidget {
-  const EmailScreen({super.key});
+class AuthNumberScreen extends StatefulWidget {
+  final String email;
+  const AuthNumberScreen({super.key, required this.email});
 
   @override
-  State<EmailScreen> createState() => _EmailScreenState();
+  State<AuthNumberScreen> createState() => _AuthNumberScreenState();
 }
 
-class _EmailScreenState extends State<EmailScreen> {
-  final TextEditingController _emailController = TextEditingController();
+class _AuthNumberScreenState extends State<AuthNumberScreen> {
+  final TextEditingController _authNumberController = TextEditingController();
 
-  String _email = '';
+  String _authnumber = '';
 
   @override
   void initState() {
     super.initState();
-    _emailController.addListener(() {
+    _authNumberController.addListener(() {
       setState(() {
-        _email = _emailController.text;
+        _authnumber = _authNumberController.text;
       });
     });
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _authNumberController.dispose();
     super.dispose();
-  }
-
-  String? _isEmailValid() {
-    if (_email.isEmpty) return null;
-    final regExp = RegExp(
-        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-    if (!regExp.hasMatch(_email)) {
-      return "이메일 형식이 올바르지 않습니다.";
-    }
-    return null;
   }
 
   void _onScafoldTap() {
     FocusScope.of(context).unfocus();
   }
 
-  void _onSubmitTap() {
-    if (_email.isEmpty || _isEmailValid() != null) return;
+  void _onNextTap() {
+    if (_authnumber.isEmpty) return;
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => AuthNumberScreen(email: _email),
+        builder: (context) => const PasswordScreen(),
       ),
     );
+  }
+
+  String? _isAuthNumberValid() {
+    if (_authnumber.isEmpty) return null;
+    if (_authnumber.length != 4) {
+      return "인증번호는 4자리입니다.";
+    }
+    return null;
   }
 
   @override
@@ -74,28 +73,35 @@ class _EmailScreenState extends State<EmailScreen> {
         ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: Sizes.size20,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Gaps.v40,
                 const Text(
-                  '이메일 주소를\n입력해주세요.',
+                  '이메일 인증',
                   style: TextStyle(
                     fontSize: Sizes.size28,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
+                Gaps.v10,
+                Text(
+                  '${widget.email} 이메일 주소로 발송된\n4자리 숫자를 입력해주세요.',
+                  style: const TextStyle(
+                    fontSize: Sizes.size16,
+                    color: Colors.black54,
+                  ),
+                ),
                 Gaps.v16,
                 TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  autocorrect: false,
+                  controller: _authNumberController,
+                  keyboardType: TextInputType.number,
+                  maxLength: 4,
+                  obscureText: true,
                   decoration: InputDecoration(
-                    hintText: 'email@address.com',
-                    errorText: _isEmailValid(),
+                    hintText: '인증번호',
+                    errorText: _isAuthNumberValid(),
                     focusedBorder: UnderlineInputBorder(
                       borderSide: BorderSide(
                         color: Theme.of(context).primaryColor,
@@ -105,13 +111,14 @@ class _EmailScreenState extends State<EmailScreen> {
                 ),
                 Gaps.v28,
                 GestureDetector(
-                  onTap: _onSubmitTap,
+                  onTap: _onNextTap,
                   child: AuthButton(
                     text: '다음',
-                    backgroundColor: _email.isEmpty || _isEmailValid() != null
-                        ? Colors.grey.shade300
-                        : Theme.of(context).primaryColor,
-                    color: _email.isEmpty || _isEmailValid() != null
+                    backgroundColor:
+                        _authnumber.isEmpty || _isAuthNumberValid() != null
+                            ? Colors.grey.shade300
+                            : Theme.of(context).primaryColor,
+                    color: _authnumber.isEmpty || _isAuthNumberValid() != null
                         ? Colors.grey.shade400
                         : Colors.white,
                   ),

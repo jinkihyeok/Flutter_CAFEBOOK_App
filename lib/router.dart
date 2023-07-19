@@ -1,10 +1,11 @@
-import 'package:caffe_app/features/authentication/sign_up/first_screen.dart';
-import 'package:caffe_app/features/authentication/sign_up/second_screen.dart';
-import 'package:caffe_app/features/home/home_screen.dart';
+import 'package:caffe_app/features/authentication/views/first_screen.dart';
+import 'package:caffe_app/features/authentication/views/second_screen.dart';
+import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
+import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
-  initialLocation: "/home",
+  initialLocation: "/second",
   routes: [
     GoRoute(
       name: FirstScreen.routeName,
@@ -20,6 +21,16 @@ final router = GoRouter(
       name: HomeScreen.routeName,
       path: HomeScreen.routeURL,
       builder: (context, state) => const HomeScreen(),
+      routes: [
+        GoRoute(
+          name: DetailScreen.routeName,
+          path: DetailScreen.routeURL,
+          builder: (context, state) {
+            final placeId = state.pathParameters['placeId']!;
+            return DetailScreen(placeId: placeId);
+          },
+        ),
+      ],
     ),
   ],
 );

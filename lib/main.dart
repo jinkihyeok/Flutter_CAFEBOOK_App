@@ -1,6 +1,8 @@
+import 'package:caffe_app/features/authentication/view_models/agree_vm.dart';
 import 'package:caffe_app/router.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +22,8 @@ void main() async {
     ),
   );
 
-  runApp(const CaffeApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => AgreeViewModel(), child: const CaffeApp()));
 }
 
 class CaffeApp extends StatelessWidget {

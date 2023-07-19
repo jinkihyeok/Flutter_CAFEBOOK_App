@@ -1,10 +1,13 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/email_screen.dart';
-import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
-import 'package:caffe_app/features/home/home_screen.dart';
+import 'package:caffe_app/features/authentication/view_models/agree_vm.dart';
+import 'package:caffe_app/features/authentication/views/agree_screen.dart';
+import 'package:caffe_app/features/authentication/views/email_screen.dart';
+import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
+import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 class LoginFormScreen extends StatefulWidget {
   const LoginFormScreen({super.key});
@@ -60,6 +63,14 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       return "비밀번호는 8자리 이상, 영문, 숫자, 특수문자를 포함해야 합니다.";
     }
     return null;
+  }
+
+  void _onFindTap() {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => AgreeScreen(
+        viewModel: Provider.of<AgreeViewModel>(context),
+      ),
+    ));
   }
 
   @override
@@ -141,16 +152,19 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   ),
                 ),
                 Gaps.v14,
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Text('비밀번호를 잊으셨나요?'),
+                    const Text('비밀번호를 잊으셨나요?'),
                     Gaps.h5,
-                    Text(
-                      '찾기',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.w600,
+                    GestureDetector(
+                      onTap: _onFindTap,
+                      child: const Text(
+                        '찾기',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],

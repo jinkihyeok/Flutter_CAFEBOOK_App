@@ -1,7 +1,7 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/features/authentication/sign_up/username_screen.dart';
-import 'package:caffe_app/features/authentication/widgets/auth_button.dart';
+import 'package:caffe_app/features/authentication/views/username_screen.dart';
+import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
