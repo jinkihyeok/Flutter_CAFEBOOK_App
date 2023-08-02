@@ -6,7 +6,6 @@ import 'package:caffe_app/features/authentication/views/email_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class LoginFormScreen extends StatefulWidget {
@@ -30,7 +29,10 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
 
-        context.goNamed(HomeScreen.routeName);
+        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+        ),
+            (route) => false);
       }
     }
   }

@@ -1,0 +1,62 @@
+%[
+  {
+    "name": "Cafe 1",
+    "address": "123 Street, City",
+    "distance": 1.2,
+    "openingTime": "08:00",
+    "closingTime": "20:00",
+    "holidays": "Sunday",
+    "images": [
+      "https://images.unsplash.com/photo-1540206395-68808572332f",
+      "https://images.unsplash.com/photo-1585788265749-3ff82a70d56d"
+    ]
+  },
+  {
+    "name": "Cafe 2",
+    "address": "456 Street, City",
+    "distance": 2.3,
+    "openingTime": "09:00",
+    "closingTime": "21:00",
+    "holidays": "Monday",
+    "images": [
+      "https://images.unsplash.com/photo-1514944023488-50768b648ff2",
+      "https://images.unsplash.com/photo-1605152819805-6be9f671cdf4"
+    ]
+  },
+  {
+    "name": "Cafe 3",
+    "address": "789 Street, City",
+    "distance": 0.8,
+    "openingTime": "07:30",
+    "closingTime": "19:00",
+    "holidays": "Saturday",
+    "images": [
+      "https://images.unsplash.com/photo-1583202956831-8a48c1421ff7",
+      "https://images.unsplash.com/photo-1603817065845-0c8f587f9367"
+    ]
+  },
+  {
+    "name": "Cafe 4",
+    "address": "101 Street, City",
+    "distance": 3.1,
+    "openingTime": "07:00",
+    "closingTime": "18:30",
+    "holidays": "Tuesday",
+    "images": [
+      "https://images.unsplash.com/photo-1555959349-1b26b61eac8c",
+      "https://images.unsplash.com/photo-1577715095991-763d6233f230"
+    ]
+  },
+  {
+    "name": "Cafe 5",
+    "address": "222 Street, City",
+    "distance": 2.8,
+    "openingTime": "10:00",
+    "closingTime": "22:00",
+    "holidays": "Wednesday",
+    "images": [
+      "https://images.unsplash.com/photo-1540206395-68808572332f",
+      "https://images.unsplash.com/photo-1603817065845-0c8f587f9367"
+    ]
+  }
+]

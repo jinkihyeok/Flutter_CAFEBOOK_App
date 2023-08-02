@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "212625524713",
+    "project_id": "jin-caffe-app",
+    "storage_bucket": "jin-caffe-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:212625524713:android:f22c58c91c9135f5312d78",
+        "android_client_info": {
+          "package_name": "com.example.caffe_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "212625524713-jv8m0qnfloj9rp4usn4efdqi3eola5g2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxDR1xkUTCo7YNYNGl-oyyVxj3_yTnq5w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "212625524713-jv8m0qnfloj9rp4usn4efdqi3eola5g2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "212625524713-apn5rs81549nitliosrp90cocrkn041u.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.caffeApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

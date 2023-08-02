@@ -39,7 +39,11 @@ class _UserNameScreenState extends State<UserNameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    context.goNamed(HomeScreen.routeName);
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
   }
 
   bool _isKoreanInput() {

@@ -1,6 +1,7 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
+import 'package:caffe_app/features/home/views/item_view_model.dart';
 import 'package:caffe_app/features/home/views/search_screen.dart';
 import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
@@ -9,6 +10,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+
+import '../../../data/cafe_model.dart';
 
 final tabs = [
   "인기순",
@@ -17,8 +21,6 @@ final tabs = [
 ];
 
 class HomeScreen extends StatefulWidget {
-  static const routeURL = '/home';
-  static const routeName = 'homeScreen';
 
   const HomeScreen({super.key});
 
@@ -102,16 +104,18 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onDetailTap() {
-    context.pushNamed(
-      DetailScreen.routeName,
-      pathParameters: {
-        'placeId': "1",
-      },
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => const DetailScreen(
+        placeId: "1",
+      ),
+    ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    List<Cafe> cafes = Provider.of<ItemViewModel>(context).cafes;
+
     return DefaultTabController(
       length: tabs.length,
       child: Stack(
@@ -201,15 +205,26 @@ class _HomeScreenState extends State<HomeScreen>
                       childAspectRatio: 1,
                     ),
                     findChildIndexCallback: (key) => null,
-                    itemCount: _itemCount,
+                    itemCount: cafes.length,
                     controller: _scrollController,
                     itemBuilder: (context, index) => GestureDetector(
                       onTap: _onDetailTap,
-                      child: const Column(
-                        children: [
-                          SignatureImage(),
-                          SignatureDescription(),
-                        ],
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const DetailScreen(
+                              placeId: "1",
+                            ),
+                          ));
+                        },
+                        child: Column(
+                          children: [
+                            SignatureImage(
+                              imageUrl: cafes[index].images,
+                            ),
+                            SignatureDescription(),
+                          ],
+                        ),
                       ),
                     ),
                   ),
