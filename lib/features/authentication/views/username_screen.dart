@@ -3,16 +3,18 @@ import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UserNameScreen extends StatefulWidget {
+import '../view_models/signup_vm.dart';
+
+class UserNameScreen extends ConsumerStatefulWidget {
   const UserNameScreen({super.key});
 
   @override
-  State<UserNameScreen> createState() => _UserNameScreenState();
+  ConsumerState<UserNameScreen> createState() => _UserNameScreenState();
 }
 
-class _UserNameScreenState extends State<UserNameScreen> {
+class _UserNameScreenState extends ConsumerState<UserNameScreen> {
   final TextEditingController _userNameController = TextEditingController();
 
   String _username = '';
@@ -39,10 +41,15 @@ class _UserNameScreenState extends State<UserNameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).push(
+    final state = ref.read(signUpForm.notifier).state;
+    ref.read(signUpForm.notifier).state = {...state, "username": _username};
+    ref.read(signUpProvider.notifier).signUp();
+    Navigator.pushAndRemoveUntil(
+      context,
       MaterialPageRoute(
         builder: (context) => const HomeScreen(),
       ),
+      (route) => false,
     );
   }
 
@@ -96,11 +103,11 @@ class _UserNameScreenState extends State<UserNameScreen> {
                   onTap: _onNextTap,
                   child: AuthButton(
                     text: '시작하기',
-                    backgroundColor: _username.isEmpty
+                    backgroundColor: _username.isEmpty || ref.read(signUpProvider).isLoading
                         ? Colors.grey.shade300
                         : Theme.of(context).primaryColor,
                     color:
-                        _username.isEmpty ? Colors.grey.shade400 : Colors.white,
+                        _username.isEmpty || ref.read(signUpProvider).isLoading ? Colors.grey.shade400 : Colors.white,
                   ),
                 ),
               ],

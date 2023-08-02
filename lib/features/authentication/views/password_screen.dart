@@ -3,18 +3,21 @@ import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/views/username_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class PasswordScreen extends StatefulWidget {
+import '../view_models/signup_vm.dart';
+
+class PasswordScreen extends ConsumerStatefulWidget {
   static const routeName = 'passwordScreen';
   static const routeURL = '/password';
   const PasswordScreen({super.key});
 
   @override
-  State<PasswordScreen> createState() => _PasswordScreenState();
+  ConsumerState<PasswordScreen> createState() => _PasswordScreenState();
 }
 
-class _PasswordScreenState extends State<PasswordScreen> {
+class _PasswordScreenState extends ConsumerState<PasswordScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
   String _password = '';
@@ -52,7 +55,10 @@ class _PasswordScreenState extends State<PasswordScreen> {
 
   void _onSubmitTap() {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
-    Navigator.of(context).push(
+    final state = ref.read(signUpForm.notifier).state;
+    ref.read(signUpForm.notifier).state = {...state, "password": _password};
+    Navigator.push(
+      context,
       MaterialPageRoute(
         builder: (context) => const UserNameScreen(),
       ),
