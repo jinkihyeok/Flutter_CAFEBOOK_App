@@ -4,18 +4,20 @@ import 'package:caffe_app/features/authentication/view_models/agree_vm.dart';
 import 'package:caffe_app/features/authentication/views/agree_screen.dart';
 import 'package:caffe_app/features/authentication/views/email_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
-import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:provider/provider.dart' as provider;
 
-class LoginFormScreen extends StatefulWidget {
+import '../view_models/login_vm.dart';
+
+class LoginFormScreen extends ConsumerStatefulWidget {
   const LoginFormScreen({super.key});
 
   @override
-  State<LoginFormScreen> createState() => _LoginFormScreenState();
+  ConsumerState<LoginFormScreen> createState() => _LoginFormScreenState();
 }
 
-class _LoginFormScreenState extends State<LoginFormScreen> {
+class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   Map<String, String> formData = {};
@@ -28,11 +30,11 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
     if (_formKey.currentState != null) {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
-
-        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-        ),
-            (route) => false);
+        ref.read(loginProvider.notifier).logIn(
+              formData['email']!,
+              formData['password']!,
+              context,
+            );
       }
     }
   }
@@ -70,7 +72,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
   void _onFindTap() {
     Navigator.of(context).push(MaterialPageRoute(
       builder: (context) => AgreeScreen(
-        viewModel: Provider.of<AgreeViewModel>(context),
+        viewModel: provider.Provider.of<AgreeViewModel>(context),
       ),
     ));
   }
@@ -176,8 +178,8 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   onTap: _onNextTap,
                   child: AuthButton(
                     text: '시작하기',
-                    color: Colors.white,
-                    backgroundColor: Theme.of(context).primaryColor,
+                    color: ref.watch(loginProvider).isLoading ? Colors.grey.shade400 : Colors.white,
+                    backgroundColor: ref.watch(loginProvider).isLoading ? Colors.grey.shade300 : Theme.of(context).primaryColor,
                   ),
                 ),
                 Gaps.v14,
