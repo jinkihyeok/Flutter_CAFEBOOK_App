@@ -2,17 +2,18 @@ import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SettingBarScreen extends StatelessWidget {
-  static const routeURL = '/setting';
-  static const routeName = 'settingBarScreen';
+import '../../authentication/repos/authentication_repo.dart';
+
+class SettingBarScreen extends ConsumerWidget {
   final Function close;
 
   const SettingBarScreen({super.key, required this.close});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Align(
       alignment: Alignment.centerRight,
       child: Container(
@@ -129,7 +130,7 @@ class SettingBarScreen extends StatelessWidget {
                                   CupertinoDialogAction(
                                     isDestructiveAction: true,
                                     child: const Text('확인'),
-                                    onPressed: () => Navigator.pop(context),
+                                    onPressed: () => ref.read(authRepo).signOut(),
                                   ),
                                 ],
                               ),

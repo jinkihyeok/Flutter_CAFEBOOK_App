@@ -52,6 +52,7 @@ class CaffeApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final auth = ref.read(authRepo);
+    ref.watch(authState);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
