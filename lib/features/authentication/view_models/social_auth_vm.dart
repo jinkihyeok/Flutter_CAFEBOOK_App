@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../home/view_models/user_vm.dart';
 import '../../home/views/home_screen.dart';
 import '../repos/authentication_repo.dart';
 
@@ -15,15 +16,18 @@ class SocialAuthViewModel extends AsyncNotifier<void> {
   Future<void> googleLogin(BuildContext context) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(
-      () async => await _repository.signInWithGoogle(),
+      () async {
+       final credential = await _repository.signInWithGoogle();
+        if (!state.hasError) {
+        await ref.read(usersProvider.notifier).createProfile(credential);
+        Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+        ),
+        (route) => false);
+        }
+      }
     );
-    if (!state.hasError) {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const HomeScreen(),
-          ),
-          (route) => false);
-    }
   }
 }
 
