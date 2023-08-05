@@ -1,7 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
-import 'package:caffe_app/features/home/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,14 +42,7 @@ class _UserNameScreenState extends ConsumerState<UserNameScreen> {
     if (_username.isEmpty) return;
     final state = ref.read(signUpForm.notifier).state;
     ref.read(signUpForm.notifier).state = {...state, "username": _username};
-    ref.read(signUpProvider.notifier).signUp();
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
-      (route) => false,
-    );
+    ref.read(signUpProvider.notifier).emailSignUp(context);
   }
 
   bool _isKoreanInput() {
@@ -103,11 +95,11 @@ class _UserNameScreenState extends ConsumerState<UserNameScreen> {
                   onTap: _onNextTap,
                   child: AuthButton(
                     text: '시작하기',
-                    backgroundColor: _username.isEmpty || ref.read(signUpProvider).isLoading
+                    backgroundColor: _username.isEmpty || ref.watch(signUpProvider).isLoading
                         ? Colors.grey.shade300
                         : Theme.of(context).primaryColor,
                     color:
-                        _username.isEmpty || ref.read(signUpProvider).isLoading ? Colors.grey.shade400 : Colors.white,
+                        _username.isEmpty || ref.watch(signUpProvider).isLoading ? Colors.grey.shade400 : Colors.white,
                   ),
                 ),
               ],

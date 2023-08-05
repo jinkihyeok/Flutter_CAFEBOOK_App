@@ -10,4 +10,12 @@ class UserProfileModel {
       : uid = '',
         email = '',
         name = '';
+
+  Map<String, String> toJson() {
+    return {
+      'uid': uid,
+      'email': email,
+      'name': name,
+    };
+  }
 }
