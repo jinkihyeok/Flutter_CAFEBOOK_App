@@ -1,7 +1,7 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
-import 'package:caffe_app/features/home/views/item_view_model.dart';
+import 'package:caffe_app/features/detailpage/view_models/item_view_model.dart';
 import 'package:caffe_app/features/home/views/search_screen.dart';
 import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
@@ -9,10 +9,8 @@ import 'package:caffe_app/features/home/views/widgets/signature_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data/cafe_model.dart';
+import '../../detailpage/models/cafe_model.dart';
 
 final tabs = [
   "인기순",
@@ -253,7 +251,7 @@ class _HomeScreenState extends State<HomeScreen>
                       Radius.circular(12),
                     ),
                   ),
-                  child: const Row(
+                  child:  const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       FaIcon(
@@ -262,14 +260,15 @@ class _HomeScreenState extends State<HomeScreen>
                         size: Sizes.size14,
                       ),
                       Gaps.h8,
-                      Text(
-                        '지도',
-                        textAlign: TextAlign.center,
+                      DefaultTextStyle(
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: Sizes.size18,
+                            color: Colors.white,
+                            fontSize: Sizes.size18,),
+                        child: Text(
+                          '지도',
+                          textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
