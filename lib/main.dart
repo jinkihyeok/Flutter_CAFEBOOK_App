@@ -1,16 +1,11 @@
 import 'package:caffe_app/features/authentication/repos/authentication_repo.dart';
-import 'package:caffe_app/features/authentication/view_models/agree_vm.dart';
 import 'package:caffe_app/features/authentication/views/first_screen.dart';
 import 'package:caffe_app/features/home/views/home_screen.dart';
-import 'package:caffe_app/features/home/views/item_view_model.dart';
 import 'package:caffe_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart' as provider;
-
-import 'data/cafe_repository.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,18 +27,10 @@ void main() async {
     ),
   );
 
-  runApp(ProviderScope(
-    child: provider.MultiProvider(
-      providers: [
-        provider.ChangeNotifierProvider(create: (context) => AgreeViewModel()),
-        provider.ChangeNotifierProvider(
-            create: (context) => ItemViewModel(
-                  repository: CafeRepository(),
-                )),
-      ],
-      child: const CaffeApp(),
+  runApp(const ProviderScope(
+      child: CaffeApp(),
     ),
-  ));
+  );
 }
 
 class CaffeApp extends ConsumerWidget {
