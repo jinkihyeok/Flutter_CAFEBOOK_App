@@ -1,16 +1,16 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
-import 'package:caffe_app/features/detailpage/view_models/item_view_model.dart';
+import 'package:caffe_app/features/detailpage/view_models/cafe_vm.dart';
 import 'package:caffe_app/features/home/views/search_screen.dart';
 import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import '../../detailpage/models/cafe_model.dart';
+import '../../map_page/views/map_screen.dart';
 
 final tabs = [
   "인기순",
@@ -18,15 +18,14 @@ final tabs = [
   "가까운순",
 ];
 
-class HomeScreen extends StatefulWidget {
-
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>
+class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
   int _itemCount = 10;
   final ScrollController _scrollController = ScrollController();
@@ -102,18 +101,24 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _onDetailTap() {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const DetailScreen(
-        placeId: "1",
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const DetailScreen(),
       ),
-    ),
+    );
+  }
+
+  void _onMapTap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const MapScreen(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Cafe> cafes = Provider.of<ItemViewModel>(context).cafes;
-
+    final cafesAsyncValue = ref.watch(cafesProvider);
     return DefaultTabController(
       length: tabs.length,
       child: Stack(
@@ -186,93 +191,113 @@ class _HomeScreenState extends State<HomeScreen>
                 ],
               ),
             ),
-            body: TabBarView(
-              children: [
-                RefreshIndicator(
-                  color: Colors.black,
-                  onRefresh: _onRefresh,
-                  child: GridView.builder(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.size20,
-                      vertical: Sizes.size16,
-                    ),
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 1,
-                      mainAxisSpacing: Sizes.size10,
-                      childAspectRatio: 1,
-                    ),
-                    findChildIndexCallback: (key) => null,
-                    itemCount: cafes.length,
-                    controller: _scrollController,
-                    itemBuilder: (context, index) => GestureDetector(
-                      onTap: _onDetailTap,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const DetailScreen(
-                              placeId: "1",
+            body: cafesAsyncValue.when(
+              data: (cafes) {
+                return TabBarView(
+                  children: [
+                    RefreshIndicator(
+                      color: Colors.black,
+                      onRefresh: _onRefresh,
+                      child: GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: Sizes.size20,
+                          vertical: Sizes.size16,
+                        ),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                          mainAxisSpacing: Sizes.size10,
+                          childAspectRatio: 1,
+                        ),
+                        findChildIndexCallback: (key) => null,
+                        itemCount: _itemCount,
+                        controller: _scrollController,
+                        itemBuilder: (context, index) => GestureDetector(
+                          onTap: _onDetailTap,
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => const DetailScreen(),
+                              ));
+                            },
+                            child: Column(
+                              children: [
+                                SignatureImage(
+                                  imageUri: cafes[index].imageUri,
+                                ),
+                                SignatureDescription(
+                                  name: cafes[index].name,
+                                  address: cafes[index].address,
+                                  geoPoint: cafes[index].geoPoint,
+                                  openingTime: cafes[index].openingTime,
+                                  closingTime: cafes[index].closingTime,
+                                ),
+                              ],
                             ),
-                          ));
-                        },
-                        child: Column(
-                          children: [
-                            SignatureImage(
-                              imageUrl: cafes[index].images,
-                            ),
-                            SignatureDescription(),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ),
-                Tab(text: tabs[1]),
-                Tab(text: tabs[2]),
-              ],
+                    Tab(
+                      text: tabs[1],
+                    ),
+                    Tab(
+                      text: tabs[2],
+                    ),
+                  ],
+                );
+              },
+              error: (error, _) => Center(
+                child: Text('$error'),
+              ),
+              loading: () => const CircularProgressIndicator(),
             ),
           ),
           Positioned(
             bottom: Sizes.size44,
             left: 0,
             right: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.size20,
-                    vertical: Sizes.size10,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(12),
+            child: GestureDetector(
+              onTap: _onMapTap,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size20,
+                      vertical: Sizes.size10,
                     ),
-                  ),
-                  child:  const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(
-                        FontAwesomeIcons.map,
-                        color: Colors.white,
-                        size: Sizes.size14,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
                       ),
-                      Gaps.h8,
-                      DefaultTextStyle(
-                        style: TextStyle(
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.map,
+                          color: Colors.white,
+                          size: Sizes.size14,
+                        ),
+                        Gaps.h8,
+                        DefaultTextStyle(
+                          style: TextStyle(
                             color: Colors.white,
-                            fontSize: Sizes.size18,),
-                        child: Text(
-                          '지도',
-                          textAlign: TextAlign.center,
+                            fontSize: Sizes.size18,
+                          ),
+                          child: Text(
+                            '지도',
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           if (_showBarrier)

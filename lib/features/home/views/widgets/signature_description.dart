@@ -4,8 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignatureDescription extends StatelessWidget {
+  final String name;
+  final String address;
+  final double geoPoint;
+  final String openingTime;
+  final String closingTime;
+
   const SignatureDescription({
-    super.key,
+    super.key, required this.name, required this.address, required this.geoPoint, required this.openingTime, required this.closingTime,
   });
 
   @override
@@ -15,8 +21,8 @@ class SignatureDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const DefaultTextStyle(
-            style: TextStyle(
+           DefaultTextStyle(
+            style: const TextStyle(
               color: Colors.black,
               fontSize: Sizes.size16,
               fontWeight: FontWeight.w600,
@@ -26,15 +32,15 @@ class SignatureDescription extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '모멘도르',
+                    name,
                   ),
                 ),
-                FaIcon(
+                const FaIcon(
                   FontAwesomeIcons.solidStar,
                   size: Sizes.size12,
                 ),
                 Gaps.h3,
-                Text(
+                const Text(
                   '4.5',
                 ),
               ],
@@ -47,17 +53,17 @@ class SignatureDescription extends StatelessWidget {
               fontWeight: FontWeight.w600,
               color: Colors.grey.shade500,
             ),
-            child: const Column(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '지정면',
+                  address,
                 ),
                 Text(
-                  '15km 거리',
+                  geoPoint.toString(),
                 ),
-                Text(
-                  '10:00 ~ 21:00 (매주 화 휴무)',
+                 Text(
+                  '$openingTime ~ $closingTime',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
