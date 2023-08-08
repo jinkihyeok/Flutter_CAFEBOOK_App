@@ -1,40 +1,34 @@
-class CafeModel {
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class Cafe {
+  final String id;
   final String name;
   final String address;
-  final double distance;
+  final double geoPoint;
   final String openingTime;
   final String closingTime;
-  final String holidays;
   final String imageUri;
 
-  CafeModel({
+  Cafe({
+    required this.id,
     required this.name,
     required this.address,
-    required this.distance,
+    required this.geoPoint,
     required this.openingTime,
     required this.closingTime,
-    required this.holidays,
     required this.imageUri,
   });
 
-  CafeModel.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        address = json['address'],
-        distance = json['distance'],
-        openingTime = json['openingTime'],
-        closingTime = json['closingTime'],
-        holidays = json['holidays'],
-        imageUri = json['imageUri'];
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'address': address,
-      'distance': distance,
-      'openingTime': openingTime,
-      'closingTime': closingTime,
-      'holidays': holidays,
-      'imageUri': imageUri,
-    };
+  factory Cafe.fromJson(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Cafe(
+      id: doc.id,
+      name: data['name'],
+      address: data['address'],
+      geoPoint: data['geoPoint'],
+      openingTime: data['openingTime'],
+      closingTime: data['closingTime'],
+      imageUri: data['imageUri'],
+    );
   }
 }
