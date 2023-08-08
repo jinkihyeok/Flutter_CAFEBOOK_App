@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../constants/gaps.dart';
 import '../../../constants/sizes.dart';
@@ -15,6 +16,14 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  late GoogleMapController _mapController;
+
+  final LatLng _center = const LatLng(35.8714, 128.6014);
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+  }
+
   void _onSearchBarTap(BuildContext context) async {
     await showCupertinoModalPopup(
       context: context,
@@ -26,7 +35,6 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.blue,
           title: Padding(
             padding: const EdgeInsets.only(
               right: Sizes.size14,
@@ -68,8 +76,13 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
         ),
-        body: const Center(
-          child: Text('Map Screen'),
-        ));
-  }
+        body: GoogleMap(
+          onMapCreated: _onMapCreated,
+          initialCameraPosition: CameraPosition(
+            target: _center,
+            zoom: 11.0,
+          ),
+        ),
+    );
+}
 }
