@@ -1,13 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:caffe_app/features/home/views/item_view_model.dart';
+import 'package:caffe_app/constants/gaps.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../models/cafe_model.dart';
 
 class DetailScreen extends StatefulWidget {
-
-  final String placeId;
-
-  const DetailScreen({super.key, required this.placeId});
+  final Cafe cafe;
+  const DetailScreen({super.key, required this.cafe});
 
   @override
   State<DetailScreen> createState() => _DetailScreenState();
@@ -16,8 +15,6 @@ class DetailScreen extends StatefulWidget {
 class _DetailScreenState extends State<DetailScreen> {
   @override
   Widget build(BuildContext context) {
-    String imageUrl = context.read<ItemViewModel>().imageUrl;
-    print(imageUrl);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Detail Screen'),
@@ -28,13 +25,16 @@ class _DetailScreenState extends State<DetailScreen> {
             width: double.infinity,
             height: 300,
             child: CachedNetworkImage(
-              width: double.infinity,
-              height: 300,
-              imageUrl: imageUrl,
+              fit: BoxFit.cover,
+              imageUrl: widget.cafe.imageUri,
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
-          Text('가게명'),
+          Gaps.v20,
+          Text(widget.cafe.name),
+          Text(widget.cafe.address),
+          Text('${widget.cafe.openingTime} ~ ${widget.cafe.closingTime}'),
+          Text('${widget.cafe.lat}, ${widget.cafe.lng}'),
         ],
       ),
     );

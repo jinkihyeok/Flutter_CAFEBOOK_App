@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../detailpage/models/cafe_model.dart';
 import '../../map_page/views/map_screen.dart';
 
 final tabs = [
@@ -100,10 +101,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     await Future.delayed(const Duration(seconds: 1));
   }
 
-  void _onDetailTap() {
+  void _onDetailTap(Cafe selectedCafe) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const DetailScreen(),
+        builder: (context) => DetailScreen(
+          cafe: selectedCafe,
+        ),
       ),
     );
   }
@@ -210,30 +213,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           childAspectRatio: 1,
                         ),
                         findChildIndexCallback: (key) => null,
-                        itemCount: _itemCount,
+                        itemCount: cafes.length,
                         controller: _scrollController,
                         itemBuilder: (context, index) => GestureDetector(
-                          onTap: _onDetailTap,
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => const DetailScreen(),
-                              ));
-                            },
-                            child: Column(
-                              children: [
-                                SignatureImage(
-                                  imageUri: cafes[index].imageUri,
-                                ),
-                                SignatureDescription(
-                                  name: cafes[index].name,
-                                  address: cafes[index].address,
-                                  geoPoint: cafes[index].geoPoint,
-                                  openingTime: cafes[index].openingTime,
-                                  closingTime: cafes[index].closingTime,
-                                ),
-                              ],
-                            ),
+                          onTap: () => _onDetailTap(cafes[index]),
+                          child: Column(
+                            children: [
+                              SignatureImage(
+                                imageUri: cafes[index].imageUri,
+                              ),
+                              SignatureDescription(
+                                name: cafes[index].name,
+                                address: cafes[index].address,
+                                lat: cafes[index].lat,
+                                lng: cafes[index].lng,
+                                openingTime: cafes[index].openingTime,
+                                closingTime: cafes[index].closingTime,
+                              ),
+                            ],
                           ),
                         ),
                       ),
