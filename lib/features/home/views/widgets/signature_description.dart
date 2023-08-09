@@ -6,13 +6,26 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class SignatureDescription extends StatelessWidget {
   final String name;
   final String address;
-  final double geoPoint;
+  final double lat;
+  final double lng;
   final String openingTime;
   final String closingTime;
 
   const SignatureDescription({
-    super.key, required this.name, required this.address, required this.geoPoint, required this.openingTime, required this.closingTime,
+    super.key, required this.name, required this.address, required this.openingTime, required this.closingTime, required this.lat, required this.lng,
   });
+
+  String extractRegion(String address) {
+    final List<String> keywords = ["읍", "면", "동"];
+    for (var keyword in keywords) {
+      final pattern = RegExp(r"(\S+" + keyword + ")");
+      final match = pattern.firstMatch(address);
+      if (match != null) {
+        return match.group(1)!;
+      }
+    }
+    return "";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +70,10 @@ class SignatureDescription extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  address,
+                  extractRegion(address),
                 ),
                 Text(
-                  geoPoint.toString(),
+                  '$lat, $lng'
                 ),
                  Text(
                   '$openingTime ~ $closingTime',
