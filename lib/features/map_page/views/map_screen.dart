@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:caffe_app/api_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +24,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   late GoogleMapController _mapController;
 
   final LatLng _center = const LatLng(37.3433, 127.9170);
+
+  final APIService _apiService = APIService();
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -51,27 +54,36 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   void _loadMarkers() async {
     final cafes = await ref.read(cafesProvider.future);
-    setState(
-      () {
-        _markers = cafes
-            .map(
-              (cafe) => Marker(
-                markerId: MarkerId(cafe.name),
-                position: LatLng(cafe.lat, cafe.lng),
-                onTap: () {
-                  print("InfoWindow tapped ${cafe.name}");
-                  setState(() {
-                    _selectedCafe = cafe;
-                  });
-                },
-                infoWindow: InfoWindow(
-                  title: cafe.name,
-                ),
+    Set<Marker> tempMarkers = {};
+
+    for (var cafe in cafes) {
+      try {
+        final latLngData = await _apiService.getLatLngFromAddress(cafe.address);
+        if (latLngData != null && latLngData["lat"] != null && latLngData["lng"] != null) {
+          final position = LatLng(latLngData["lat"], latLngData["lng"]);
+          tempMarkers.add(
+            Marker(
+              markerId: MarkerId(cafe.name),
+              position: position,
+              onTap: () {
+                setState(() {
+                  _selectedCafe = cafe;
+                });
+              },
+              infoWindow: InfoWindow(
+                title: cafe.name,
               ),
-            )
-            .toSet();
-      },
-    );
+            ),
+          );
+        }
+      } catch (error) {
+        print("Error fetching LatLng for cafe ${cafe.name}: $error");
+      }
+    }
+
+    setState(() {
+      _markers = tempMarkers;
+    });
   }
 
   @override
