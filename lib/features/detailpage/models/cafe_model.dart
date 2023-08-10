@@ -4,7 +4,9 @@ class Cafe {
   final String id;
   final String name;
   final String address;
-  final double geoPoint;
+  final String location;
+  final double lat;
+  final double lng;
   final String openingTime;
   final String closingTime;
   final String imageUri;
@@ -13,7 +15,9 @@ class Cafe {
     required this.id,
     required this.name,
     required this.address,
-    required this.geoPoint,
+    required this.location,
+    required this.lat,
+    required this.lng,
     required this.openingTime,
     required this.closingTime,
     required this.imageUri,
@@ -25,7 +29,9 @@ class Cafe {
       id: doc.id,
       name: data['name'],
       address: data['address'],
-      geoPoint: data['geoPoint'],
+      location: data['location'],
+      lat: data['lat'],
+      lng: data['lng'],
       openingTime: data['openingTime'],
       closingTime: data['closingTime'],
       imageUri: data['imageUri'],

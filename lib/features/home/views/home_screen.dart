@@ -225,6 +225,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                               SignatureDescription(
                                 name: cafes[index].name,
                                 address: cafes[index].address,
+                                location: cafes[index].location,
                                 lat: cafes[index].lat,
                                 lng: cafes[index].lng,
                                 openingTime: cafes[index].openingTime,
