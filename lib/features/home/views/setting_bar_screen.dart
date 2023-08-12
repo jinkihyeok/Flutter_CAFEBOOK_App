@@ -2,6 +2,7 @@ import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/views/first_screen.dart';
 import 'package:caffe_app/features/home/view_models/user_vm.dart';
+import 'package:caffe_app/features/home/views/favor_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,59 @@ class SettingBarScreen extends ConsumerWidget {
   final Function close;
 
   const SettingBarScreen({super.key, required this.close});
+
+  void _onFavorTap(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const FavorScreen(),
+      ),
+    );
+  }
+
+  void _onAboutTap(BuildContext context) {
+    showAboutDialog(
+      context: context,
+      applicationVersion: "1.0.0",
+      applicationIcon: const FlutterLogo(),
+      applicationLegalese: "© 2023 Caffe App",
+      children: const [
+        Text("Caffe App은 Flutter를 이용하여 제작된 앱입니다."),
+      ],
+    );
+  }
+
+  void _onLogoutTap(BuildContext context, WidgetRef ref) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+        title: const Text('로그아웃'),
+        content: const Text('로그아웃 하시겠습니까?'),
+        actions: [
+          CupertinoDialogAction(
+            child: const Text('취소'),
+            onPressed: () =>
+                Navigator.pop(context),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            child: const Text('확인'),
+            onPressed: () {
+              ref.read(authRepo).signOut();
+              Navigator.pop(context);
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                  const FirstScreen(),
+                ),
+                    (route) => false,
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,7 +104,7 @@ class SettingBarScreen extends ConsumerWidget {
                           ),
                         ),
                         Gaps.v80,
-                         Text(
+                        Text(
                           data.name,
                           style: const TextStyle(
                             fontSize: Sizes.size24,
@@ -58,7 +112,7 @@ class SettingBarScreen extends ConsumerWidget {
                           ),
                         ),
                         Gaps.v10,
-                         Row(
+                        Row(
                           children: [
                             Expanded(
                               child: Text(
@@ -87,27 +141,22 @@ class SettingBarScreen extends ConsumerWidget {
                           ),
                           child: Column(
                             children: [
-                              const Row(
-                                children: [
-                                  FaIcon(
-                                    FontAwesomeIcons.heart,
-                                    size: Sizes.size20,
-                                  ),
-                                  Gaps.h14,
-                                  Text('위시리스트'),
-                                ],
+                              GestureDetector(
+                                onTap: () => _onFavorTap(context),
+                                child: const Row(
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.heart,
+                                      size: Sizes.size20,
+                                    ),
+                                    Gaps.h14,
+                                    Text('즐겨찾기'),
+                                  ],
+                                ),
                               ),
                               Gaps.v24,
                               GestureDetector(
-                                onTap: () => showAboutDialog(
-                                    context: context,
-                                    applicationVersion: "1.0.0",
-                                    applicationIcon: const FlutterLogo(),
-                                    applicationLegalese: "© 2023 Caffe App",
-                                    children: const [
-                                      Text(
-                                          "Caffe App은 Flutter를 이용하여 제작된 앱입니다."),
-                                    ]),
+                                onTap: () => _onAboutTap(context),
                                 child: const Row(
                                   children: [
                                     FlutterLogo(
@@ -120,38 +169,7 @@ class SettingBarScreen extends ConsumerWidget {
                               ),
                               Gaps.v24,
                               GestureDetector(
-                                onTap: () {
-                                  showCupertinoDialog(
-                                    context: context,
-                                    builder: (context) => CupertinoAlertDialog(
-                                      title: const Text('로그아웃'),
-                                      content: const Text('로그아웃 하시겠습니까?'),
-                                      actions: [
-                                        CupertinoDialogAction(
-                                          child: const Text('취소'),
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                        ),
-                                        CupertinoDialogAction(
-                                          isDestructiveAction: true,
-                                          child: const Text('확인'),
-                                          onPressed: () {
-                                            ref.read(authRepo).signOut();
-                                            Navigator.pop(context);
-                                            Navigator.pushAndRemoveUntil(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const FirstScreen(),
-                                              ),
-                                              (route) => false,
-                                            );
-                                          },
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                },
+                                onTap: () => _onLogoutTap(context, ref),
                                 child: const Row(
                                   children: [
                                     FaIcon(
