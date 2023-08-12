@@ -26,7 +26,7 @@ class SignatureImage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return FadeInImage.assetNetwork(
                   fit: BoxFit.cover,
-                  placeholder: "assets/images/background_image.jpg",
+                  placeholder: "assets/images/morning_coffee.jpeg",
                   image: imageUri,
                 );
               },
