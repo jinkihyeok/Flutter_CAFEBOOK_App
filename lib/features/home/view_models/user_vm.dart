@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:caffe_app/features/authentication/repos/authentication_repo.dart';
-import 'package:caffe_app/features/home/user_model.dart';
+import 'package:caffe_app/features/home/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -34,9 +34,22 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
       uid: credential.user!.uid,
       email: credential.user!.email!,
       name: credential.user!.displayName ?? emailUserName,
+      favorites: [],
     );
     await _userRepository.createProfile(profile);
     state = AsyncValue.data(profile);
+  }
+
+  Future<void> addFavorite(String cafeId) async {
+    final uid = _authenticationRepository.user!.uid;
+    await _userRepository.setFavorite(uid, cafeId);
+    print('pass user_vm!');
+  }
+
+  Future<void> deleteFavorite(String cafeId) async {
+    final uid = _authenticationRepository.user!.uid;
+    await _userRepository.deleteFavorite(uid, cafeId);
+    print('pass user_vm!');
   }
 }
 
