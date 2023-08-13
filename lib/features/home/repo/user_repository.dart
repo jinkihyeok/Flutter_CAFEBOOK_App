@@ -15,17 +15,12 @@ class UserRepository {
   }
 
   Future<void> setFavorite(String uid, String cafeId) async {
-    try {
       await _db.collection('users').doc(uid).update(
         {
           'favorites': FieldValue.arrayUnion([cafeId]),
         },
       );
-    } catch (error) {
-      print('Error updating favorites: $error');
-    }
   }
-
 
   Future<void> deleteFavorite(String uid, String cafeId) async {
     await _db.collection('users').doc(uid).update(
@@ -33,7 +28,12 @@ class UserRepository {
         'favorites': FieldValue.arrayRemove([cafeId]),
       },
     );
-    print('userRepo!');
+  }
+
+  Future<List<String>> getUserFavorites(String uid) async {
+    final doc = await _db.collection('users').doc(uid).get();
+    Map<String, dynamic>? data = doc.data();
+    return data?['favorites']?.cast<String>() ?? [];
   }
 }
 

@@ -43,13 +43,17 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
   Future<void> addFavorite(String cafeId) async {
     final uid = _authenticationRepository.user!.uid;
     await _userRepository.setFavorite(uid, cafeId);
-    print('pass user_vm!');
   }
 
   Future<void> deleteFavorite(String cafeId) async {
     final uid = _authenticationRepository.user!.uid;
     await _userRepository.deleteFavorite(uid, cafeId);
-    print('pass user_vm!');
+  }
+
+  Future<List<String>> getUserFavorites() async {
+    final uid = _authenticationRepository.user!.uid;
+   List<String> favorites = await _userRepository.getUserFavorites(uid);
+   return favorites ?? [];
   }
 }
 

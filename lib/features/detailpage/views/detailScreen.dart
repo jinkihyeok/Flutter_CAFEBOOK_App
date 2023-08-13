@@ -19,15 +19,28 @@ class DetailScreen extends ConsumerStatefulWidget {
 class _DetailScreenState extends ConsumerState<DetailScreen> {
   bool isFavorite = false;
 
+  @override
+  void initState() {
+    super.initState();
+    _setupFavoriteStatus();
+  }
+
+  void _setupFavoriteStatus() async {
+    final cafeId = widget.cafe.id;
+
+    List<String> userFavorites = await ref.read(usersProvider.notifier).getUserFavorites();
+    setState(() {
+      isFavorite = userFavorites.contains(cafeId);
+    });
+  }
+
   void _toggleFavorite() async {
     final cafeId = widget.cafe.id;
 
     if (!isFavorite) {
       await ref.read(usersProvider.notifier).addFavorite(cafeId);
-      print('addFavorite! : $cafeId');
     } else {
       await ref.read(usersProvider.notifier).deleteFavorite(cafeId);
-      print('deleteFavorite! : $cafeId');
     }
 
     setState(() {
