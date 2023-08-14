@@ -28,59 +28,69 @@ class FavorScreen extends ConsumerWidget {
           ? const Center(
               child: CircularProgressIndicator(),
             )
-          : GridView.builder(
-              padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.size16,
-                vertical: Sizes.size16,
-              ),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10,
-              ),
-              itemCount: favorites.length,
-              itemBuilder: (context, index) {
-                return GridTile(
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          clipBehavior: Clip.hardEdge,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(Sizes.size8),
-                          ),
-                          child: CachedNetworkImage(
-                            width: double.infinity,
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            imageUrl: favorites[index].imageUri,
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        ),
-                      ),
-                      Gaps.v8,
-                      Text(
-                        favorites[index].name,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: const TextStyle(
-                          fontSize: Sizes.size14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        favorites[index].location,
-                        style: const TextStyle(
-                          fontSize: Sizes.size14,
-                        ),
-                      ),
-                    ],
+          : (favorites.isEmpty)
+              ? const Center(
+                  child: Text(
+                    '즐겨찾기 목록이 비어있습니다.',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
                   ),
-                );
-              },
-            ),
+                )
+              : GridView.builder(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Sizes.size16,
+                    vertical: Sizes.size16,
+                  ),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                  ),
+                  itemCount: favorites.length,
+                  itemBuilder: (context, index) {
+                    return GridTile(
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              clipBehavior: Clip.hardEdge,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.circular(Sizes.size8),
+                              ),
+                              child: CachedNetworkImage(
+                                width: double.infinity,
+                                height: double.infinity,
+                                fit: BoxFit.cover,
+                                imageUrl: favorites[index].imageUri,
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
+                          ),
+                          Gaps.v8,
+                          Text(
+                            favorites[index].name,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: const TextStyle(
+                              fontSize: Sizes.size14,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          Text(
+                            favorites[index].location,
+                            style: const TextStyle(
+                              fontSize: Sizes.size14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
     );
   }
 }
