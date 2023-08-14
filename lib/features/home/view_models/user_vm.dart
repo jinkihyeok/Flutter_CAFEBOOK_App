@@ -43,11 +43,37 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
   Future<void> addFavorite(String cafeId) async {
     final uid = _authenticationRepository.user!.uid;
     await _userRepository.setFavorite(uid, cafeId);
+
+    List<String> updatedFavorites = await _userRepository.getUserFavorites(uid);
+
+    if (state is AsyncData<UserProfileModel>) {
+      final currentProfile = (state as AsyncData<UserProfileModel>).value;
+      final updatedProfile = UserProfileModel(
+        uid: currentProfile.uid,
+        email: currentProfile.email,
+        name: currentProfile.name,
+        favorites: updatedFavorites,
+      );
+      state = AsyncValue.data(updatedProfile);
+    }
   }
 
   Future<void> deleteFavorite(String cafeId) async {
     final uid = _authenticationRepository.user!.uid;
     await _userRepository.deleteFavorite(uid, cafeId);
+
+    List<String> updatedFavorites = await _userRepository.getUserFavorites(uid);
+
+    if (state is AsyncData<UserProfileModel>) {
+      final currentProfile = (state as AsyncData<UserProfileModel>).value;
+      final updatedProfile = UserProfileModel(
+        uid: currentProfile.uid,
+        email: currentProfile.email,
+        name: currentProfile.name,
+        favorites: updatedFavorites,
+      );
+      state = AsyncValue.data(updatedProfile);
+    }
   }
 
   Future<List<String>> getUserFavorites() async {
