@@ -11,6 +11,7 @@ import '../../../constants/sizes.dart';
 import '../../detailpage/models/cafe_model.dart';
 import '../../detailpage/view_models/cafe_vm.dart';
 import '../../detailpage/views/detailScreen.dart';
+import '../../home/view_models/user_vm.dart';
 import '../../home/views/search_screen.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
@@ -39,7 +40,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
 
   void _onDetailTap() {
-  Navigator.of(context).push(
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => DetailScreen(
           cafe: _selectedCafe!,
@@ -59,7 +60,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     for (var cafe in cafes) {
       try {
         final latLngData = await _apiService.getLatLngFromAddress(cafe.address);
-        if (latLngData != null && latLngData["lat"] != null && latLngData["lng"] != null) {
+        if (latLngData != null &&
+            latLngData["lat"] != null &&
+            latLngData["lng"] != null) {
           final position = LatLng(latLngData["lat"], latLngData["lng"]);
           tempMarkers.add(
             Marker(
@@ -80,7 +83,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         print("Error fetching LatLng for cafe ${cafe.name}: $error");
       }
     }
-
     setState(() {
       _markers = tempMarkers;
     });
@@ -94,6 +96,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userProfile = ref.watch(usersProvider).value;
+    final isFavorite =
+        userProfile?.favorites.contains(_selectedCafe?.id) ?? false;
+
     return Scaffold(
       appBar: AppBar(
         title: Padding(
@@ -197,19 +203,27 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(_selectedCafe!.name, style: const TextStyle(fontWeight: FontWeight.w600),),
-                                    const FaIcon(
-                                      FontAwesomeIcons.solidHeart,
+                                    Text(
+                                      _selectedCafe!.name,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    FaIcon(
+                                      isFavorite
+                                          ? FontAwesomeIcons.solidHeart
+                                          : FontAwesomeIcons.heart,
                                       size: Sizes.size16,
                                       color: Colors.black,
                                     ),
                                   ],
                                 ),
                                 Gaps.v20,
-                                Text('${_selectedCafe!.lat}, ${_selectedCafe!.lng}'),
-                                Text('${_selectedCafe!.openingTime} ~ ${_selectedCafe!.closingTime}'),
+                                Text(_selectedCafe!.location),
+                                Text(
+                                    '${_selectedCafe!.openingTime} ~ ${_selectedCafe!.closingTime}'),
                               ],
                             ),
                           ),
