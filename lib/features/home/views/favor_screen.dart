@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/sizes.dart';
+import '../../detailpage/views/detailScreen.dart';
 
 class FavorScreen extends ConsumerWidget {
   const FavorScreen({Key? key}) : super(key: key);
@@ -19,6 +20,16 @@ class FavorScreen extends ConsumerWidget {
             ?.where((cafe) => userProfile?.favorites.contains(cafe.id) ?? false)
             .toList() ??
         [];
+
+    void onTileTap(favorites, index) {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DetailScreen(
+            cafe: favorites[index],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -54,43 +65,46 @@ class FavorScreen extends ConsumerWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return GridTile(
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(Sizes.size8),
+                      return GestureDetector(
+                        onTap: () => onTileTap(favorites, index),
+                        child: GridTile(
+                          child: Column(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  decoration: BoxDecoration(
+                                    borderRadius:
+                                        BorderRadius.circular(Sizes.size8),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    fit: BoxFit.cover,
+                                    imageUrl: favorites[index].imageUri,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                  ),
                                 ),
-                                child: CachedNetworkImage(
-                                  width: double.infinity,
-                                  height: double.infinity,
-                                  fit: BoxFit.cover,
-                                  imageUrl: favorites[index].imageUri,
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
+                              ),
+                              Gaps.v8,
+                              Text(
+                                favorites[index].name,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                style: const TextStyle(
+                                  fontSize: Sizes.size14,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                            Gaps.v8,
-                            Text(
-                              favorites[index].name,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: const TextStyle(
-                                fontSize: Sizes.size14,
-                                fontWeight: FontWeight.w600,
+                              Text(
+                                favorites[index].location,
+                                style: const TextStyle(
+                                  fontSize: Sizes.size14,
+                                ),
                               ),
-                            ),
-                            Text(
-                              favorites[index].location,
-                              style: const TextStyle(
-                                fontSize: Sizes.size14,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       );
                     },
