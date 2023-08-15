@@ -4,34 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-const locations = [
-  "기업도시",
-  "혁신도시",
-  "단계동",
-  "무실동",
-  "단구동",
-  "행구동",
-  "봉산동",
-  "우산동",
-  "태장1동",
-  "태장2동",
-  "학성동",
-  "일산동",
-  "명륜1동",
-  "명륜2동",
-  "개운동",
-  "원인동",
-  "중앙동",
-  "문막읍",
-  "소초면",
-  "호저면",
-  "부론면",
-  "귀래면",
-  "흥업면",
-  "판부면",
-  "신림면",
-];
-
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});
 
@@ -40,6 +12,35 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final List<String> locations = [
+    "지정면",
+    "반곡관설동",
+    "단계동",
+    "무실동",
+    "단구동",
+    "행구동",
+    "봉산동",
+    "우산동",
+    "태장1동",
+    "태장2동",
+    "학성동",
+    "일산동",
+    "명륜1동",
+    "명륜2동",
+    "개운동",
+    "원인동",
+    "중앙동",
+    "문막읍",
+    "소초면",
+    "호저면",
+    "부론면",
+    "귀래면",
+    "흥업면",
+    "판부면",
+    "신림면",
+  ];
+  int selectedLocationIndex = -1;
+
   final TextEditingController _textEditingController = TextEditingController();
 
   void _onSearchBarTap() {
@@ -69,15 +70,12 @@ class _SearchScreenState extends State<SearchScreen> {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           scrolledUnderElevation: 0,
-          leading: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Sizes.size20, vertical: Sizes.size20),
-            child: IconButton(
-              icon: const FaIcon(
-                FontAwesomeIcons.circleXmark,
-              ),
-              onPressed: () => Navigator.of(context).pop(),
+          leading: IconButton(
+            iconSize: Sizes.size32,
+            icon: const FaIcon(
+              FontAwesomeIcons.circleXmark,
             ),
+            onPressed: () => Navigator.of(context).pop(),
           ),
         ),
         body: Scrollbar(
@@ -100,7 +98,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    '위치를 골라주세요',
+                    '카페 또는 지역으로\n검색해주세요.',
                     style: TextStyle(
                       fontSize: Sizes.size28,
                       fontWeight: FontWeight.w700,
@@ -110,10 +108,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   GestureDetector(
                     onTap: _onSearchBarTap,
                     child: CupertinoSearchTextField(
+                      onSuffixTap: () {
+                        _textEditingController.clear();
+                        setState(() => selectedLocationIndex = -1);
+                      },
                       controller: _textEditingController,
                       onChanged: _onSearchChanged,
                       onSubmitted: _onSearchSubmitted,
-                      placeholder: '위치 검색',
+                      placeholder: '카페명 or 지역명 검색',
                       itemColor: Colors.black,
                       itemSize: Sizes.size24,
                       padding: const EdgeInsets.all(Sizes.size12),
@@ -132,31 +134,42 @@ class _SearchScreenState extends State<SearchScreen> {
                     runSpacing: 15,
                     spacing: 8,
                     children: [
-                      for (var location in locations)
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size14,
-                            vertical: Sizes.size10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.black.withOpacity(0.1),
+                      for (var index = 0; index < locations.length; index++)
+                        GestureDetector(
+                          onTap: () {
+                            _textEditingController.text = locations[index];
+                            setState(() => selectedLocationIndex = index);
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: Sizes.size14,
+                              vertical: Sizes.size10,
                             ),
-                            borderRadius: BorderRadius.circular(
-                              Sizes.size32,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 5,
+                            decoration: BoxDecoration(
+                              color: index == selectedLocationIndex
+                                  ? Colors.black
+                                  : Colors.white,
+                              border: Border.all(
+                                color: Colors.black.withOpacity(0.1),
                               ),
-                            ],
-                          ),
-                          child: Text(
-                            location,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
+                              borderRadius: BorderRadius.circular(
+                                Sizes.size32,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 5,
+                                ),
+                              ],
+                            ),
+                            child: Text(
+                              locations[index],
+                              style: TextStyle(
+                                color: index == selectedLocationIndex
+                                    ? Colors.white
+                                    : Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         )
