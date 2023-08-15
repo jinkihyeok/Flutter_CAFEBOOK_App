@@ -1,17 +1,25 @@
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SignatureImage extends StatelessWidget {
+import '../../view_models/user_vm.dart';
+
+class SignatureImage extends ConsumerWidget {
   final String imageUri;
+  final String id;
 
   const SignatureImage({
     required this.imageUri,
+    required this.id,
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userProfile = ref.watch(usersProvider).value;
+    final isFavorite = userProfile?.favorites.contains(id) ?? false;
+
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -32,11 +40,11 @@ class SignatureImage extends StatelessWidget {
               },
             ),
           ),
-          const Positioned(
+           Positioned(
             top: 16,
             right: 16,
             child: FaIcon(
-              FontAwesomeIcons.solidHeart,
+             isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
               size: Sizes.size24,
               color: Colors.black,
             ),
