@@ -33,6 +33,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   bool _showBarrier = false;
 
+  String selectedLocation = "All";
+
   late final AnimationController _animationController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 200),
@@ -75,10 +77,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _onSearchBarTap(BuildContext context) async {
-    await showCupertinoModalPopup(
+   final result = await showCupertinoModalPopup(
       context: context,
       builder: (context) => const SearchScreen(),
     );
+
+    if (result != null) {
+      setState(() {
+        selectedLocation = result;
+      });
+    }
   }
 
   void _onSettingBarTap() {
@@ -122,6 +130,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final cafesAsyncValue = ref.watch(cafesProvider);
+
+    List<Cafe> filteredCafes = [];
+
+    if (cafesAsyncValue is AsyncData<List<Cafe>>) {
+      final cafes = cafesAsyncValue.value;
+
+      if (selectedLocation != 'All') {
+        filteredCafes = cafes.where((cafe) {
+          return cafe.location == selectedLocation;
+
+        }).toList();
+        } else if (selectedLocation == 'All') {
+        filteredCafes = cafes;
+      }
+    }
+
     return DefaultTabController(
       length: tabs.length,
       child: Stack(
@@ -213,23 +237,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           childAspectRatio: 1,
                         ),
                         findChildIndexCallback: (key) => null,
-                        itemCount: cafes.length,
+                        itemCount: filteredCafes.length,
                         controller: _scrollController,
                         itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => _onDetailTap(cafes[index]),
+                          onTap: () => _onDetailTap(filteredCafes[index]),
                           child: Column(
                             children: [
                               SignatureImage(
-                                imageUri: cafes[index].imageUri,
+                                imageUri: filteredCafes[index].imageUri,
+                                id: filteredCafes[index].id,
                               ),
                               SignatureDescription(
-                                name: cafes[index].name,
-                                address: cafes[index].address,
-                                location: cafes[index].location,
-                                lat: cafes[index].lat,
-                                lng: cafes[index].lng,
-                                openingTime: cafes[index].openingTime,
-                                closingTime: cafes[index].closingTime,
+                                name: filteredCafes[index].name,
+                                address: filteredCafes[index].address,
+                                location: filteredCafes[index].location,
+                                openingTime: filteredCafes[index].openingTime,
+                                closingTime: filteredCafes[index].closingTime,
                               ),
                             ],
                           ),

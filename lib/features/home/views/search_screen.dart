@@ -13,6 +13,7 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final List<String> locations = [
+    "All",
     "지정면",
     "반곡관설동",
     "단계동",
@@ -189,35 +190,40 @@ class _SearchScreenState extends State<SearchScreen> {
               mainAxisAlignment: MainAxisAlignment.end,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.size20,
-                    vertical: Sizes.size10,
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(16),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.pop(context, _textEditingController.text);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size20,
+                      vertical: Sizes.size10,
                     ),
-                  ),
-                  child: const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FaIcon(
-                        FontAwesomeIcons.magnifyingGlass,
-                        color: Colors.white,
-                        size: Sizes.size16,
+                    decoration: const BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(16),
                       ),
-                      Gaps.h8,
-                      Text(
-                        '검색',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        FaIcon(
+                          FontAwesomeIcons.magnifyingGlass,
                           color: Colors.white,
-                          fontSize: Sizes.size20,
+                          size: Sizes.size16,
                         ),
-                      ),
-                    ],
+                        Gaps.h8,
+                        Text(
+                          '검색',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: Sizes.size20,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
