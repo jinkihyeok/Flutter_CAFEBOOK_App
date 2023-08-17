@@ -48,7 +48,19 @@ class _SearchScreenState extends State<SearchScreen> {
     FocusScope.of(context).unfocus();
   }
 
-  void _onSearchChanged(String value) {}
+  void _onSearchChanged(String value) {
+    int matchedIndex = locations.indexWhere((location) => location == value);
+
+    setState(
+      () {
+        if (matchedIndex != -1) {
+          selectedLocationIndex = matchedIndex;
+        } else {
+          selectedLocationIndex = -1;
+        }
+      },
+    );
+  }
 
   void _onSearchSubmitted(String value) {}
 
