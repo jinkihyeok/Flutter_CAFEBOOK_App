@@ -15,7 +15,8 @@ import '../../home/view_models/user_vm.dart';
 import '../../home/views/search_screen.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
-  const MapScreen({Key? key}) : super(key: key);
+  final List<Cafe> cafes;
+  const MapScreen({Key? key, required this.cafes}) : super(key: key);
 
   @override
   ConsumerState createState() => _MapScreenState();
@@ -54,7 +55,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   Cafe? _selectedCafe;
 
   void _loadMarkers() async {
-    final cafes = await ref.read(cafesProvider.future);
+    final cafes = widget.cafes;
     Set<Marker> tempMarkers = {};
 
     for (var cafe in cafes) {
