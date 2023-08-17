@@ -62,7 +62,9 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void _onSearchSubmitted(String value) {}
+  void _onSearchSubmitted(String value) {
+    Navigator.pop(context, value);
+  }
 
   @override
   void dispose() {
