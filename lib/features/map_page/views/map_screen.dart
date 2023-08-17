@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:caffe_app/api_service.dart';
+import 'package:caffe_app/features/map_page/view_models/api_service.dart';
+import 'package:caffe_app/features/map_page/views/selected_cafe_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -9,7 +10,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../constants/gaps.dart';
 import '../../../constants/sizes.dart';
 import '../../detailpage/models/cafe_model.dart';
-import '../../detailpage/view_models/cafe_vm.dart';
 import '../../detailpage/views/detailScreen.dart';
 import '../../home/view_models/user_vm.dart';
 import '../../home/views/search_screen.dart';
@@ -160,81 +160,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             },
           ),
           if (_selectedCafe != null)
-            Positioned(
-              bottom: Sizes.size80,
-              left: 0,
-              right: 0,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: Sizes.size28),
-                child: GestureDetector(
-                  onTap: _onDetailTap,
-                  child: Container(
-                    clipBehavior: Clip.hardEdge,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(Sizes.size12),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.8),
-                          spreadRadius: 1,
-                          blurRadius: Sizes.size8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    height: 110,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          flex: 3,
-                          child: CachedNetworkImage(
-                            height: double.infinity,
-                            fit: BoxFit.cover,
-                            imageUrl: _selectedCafe!.imageUri,
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 7,
-                          child: Padding(
-                            padding: const EdgeInsets.all(Sizes.size14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      _selectedCafe!.name,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    FaIcon(
-                                      isFavorite
-                                          ? FontAwesomeIcons.solidHeart
-                                          : FontAwesomeIcons.heart,
-                                      size: Sizes.size16,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                                Gaps.v20,
-                                Text(_selectedCafe!.location),
-                                Text(
-                                    '${_selectedCafe!.openingTime} ~ ${_selectedCafe!.closingTime}'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            SelectedCafeInfo(selectedCafe: _selectedCafe, isFavorite: isFavorite, onTap: _onDetailTap)
         ],
       ),
     );
