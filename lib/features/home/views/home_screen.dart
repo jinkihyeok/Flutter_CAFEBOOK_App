@@ -13,12 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../detailpage/models/cafe_model.dart';
 import '../../map_page/views/map_screen.dart';
 
-final tabs = [
-  "인기순",
-  "신규순",
-  "가까운순",
-];
-
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
@@ -28,12 +22,50 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
     with SingleTickerProviderStateMixin {
+  final tabs = [
+    "인기순",
+    "신규순",
+    "가까운순",
+  ];
+
+  final List<String> locations = [
+    "All",
+    "지정면",
+    "반곡관설동",
+    "단계동",
+    "무실동",
+    "단구동",
+    "행구동",
+    "봉산동",
+    "우산동",
+    "태장1동",
+    "태장2동",
+    "학성동",
+    "일산동",
+    "명륜1동",
+    "명륜2동",
+    "개운동",
+    "원인동",
+    "중앙동",
+    "문막읍",
+    "소초면",
+    "호저면",
+    "부론면",
+    "귀래면",
+    "흥업면",
+    "판부면",
+    "신림면",
+  ];
+
   int _itemCount = 10;
+
   final ScrollController _scrollController = ScrollController();
 
   bool _showBarrier = false;
 
   String selectedLocation = "All";
+
+  String selectedName = "";
 
   late final AnimationController _animationController = AnimationController(
     vsync: this,
@@ -77,15 +109,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   }
 
   void _onSearchBarTap(BuildContext context) async {
-   final result = await showCupertinoModalPopup(
+    final result = await showCupertinoModalPopup(
       context: context,
       builder: (context) => const SearchScreen(),
     );
 
-    if (result != null) {
-      setState(() {
-        selectedLocation = result;
-      });
+    if (result != null && locations.contains(result)) {
+      setState(
+        () {
+          selectedLocation = result;
+          selectedName = "";
+        },
+      );
+    } else if (result != null && !locations.contains(result)) {
+      setState(
+        () {
+          selectedLocation = "All";
+          selectedName = result;
+        },
+      );
     }
   }
 
@@ -139,10 +181,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       if (selectedLocation != 'All') {
         filteredCafes = cafes.where((cafe) {
           return cafe.location == selectedLocation;
-
         }).toList();
-        } else if (selectedLocation == 'All') {
-        filteredCafes = cafes;
+      } else if (selectedLocation == 'All') {
+        if (selectedName != '') {
+          filteredCafes = cafes.where((cafe) {
+            return cafe.name.contains(selectedName);
+          }).toList();
+        } else {
+          filteredCafes = cafes;
+        }
       }
     }
 
@@ -220,53 +267,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             ),
             body: cafesAsyncValue.when(
               data: (cafes) {
-                return TabBarView(
-                  children: [
-                    RefreshIndicator(
-                      color: Colors.black,
-                      onRefresh: _onRefresh,
-                      child: GridView.builder(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: Sizes.size20,
-                          vertical: Sizes.size16,
-                        ),
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 1,
-                          mainAxisSpacing: Sizes.size10,
-                          childAspectRatio: 1,
-                        ),
-                        findChildIndexCallback: (key) => null,
-                        itemCount: filteredCafes.length,
-                        controller: _scrollController,
-                        itemBuilder: (context, index) => GestureDetector(
-                          onTap: () => _onDetailTap(filteredCafes[index]),
-                          child: Column(
-                            children: [
-                              SignatureImage(
-                                imageUri: filteredCafes[index].imageUri,
-                                id: filteredCafes[index].id,
-                              ),
-                              SignatureDescription(
-                                name: filteredCafes[index].name,
-                                address: filteredCafes[index].address,
-                                location: filteredCafes[index].location,
-                                openingTime: filteredCafes[index].openingTime,
-                                closingTime: filteredCafes[index].closingTime,
-                              ),
-                            ],
+                if (filteredCafes.isEmpty) {
+                  return const Center(
+                    child: Text(
+                      '검색 결과가 없습니다.',
+                      style: TextStyle(
+                        fontSize: Sizes.size18,
+                      ),
+                    ),
+                  );
+                } else {
+                  return TabBarView(
+                    children: [
+                      RefreshIndicator(
+                        color: Colors.black,
+                        onRefresh: _onRefresh,
+                        child: GridView.builder(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: Sizes.size20,
+                            vertical: Sizes.size16,
+                          ),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 1,
+                            mainAxisSpacing: Sizes.size10,
+                            childAspectRatio: 1,
+                          ),
+                          findChildIndexCallback: (key) => null,
+                          itemCount: filteredCafes.length,
+                          controller: _scrollController,
+                          itemBuilder: (context, index) => GestureDetector(
+                            onTap: () => _onDetailTap(filteredCafes[index]),
+                            child: Column(
+                              children: [
+                                SignatureImage(
+                                  imageUri: filteredCafes[index].imageUri,
+                                  id: filteredCafes[index].id,
+                                ),
+                                SignatureDescription(
+                                  name: filteredCafes[index].name,
+                                  address: filteredCafes[index].address,
+                                  location: filteredCafes[index].location,
+                                  openingTime: filteredCafes[index].openingTime,
+                                  closingTime: filteredCafes[index].closingTime,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      text: tabs[1],
-                    ),
-                    Tab(
-                      text: tabs[2],
-                    ),
-                  ],
-                );
+                      Tab(
+                        text: tabs[1],
+                      ),
+                      Tab(
+                        text: tabs[2],
+                      ),
+                    ],
+                  );
+                }
               },
               error: (error, _) => Center(
                 child: Text('$error'),
