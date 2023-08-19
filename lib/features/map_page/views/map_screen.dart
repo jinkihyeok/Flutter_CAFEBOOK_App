@@ -16,6 +16,7 @@ import '../../home/views/search_screen.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   final List<Cafe> cafes;
+
   const MapScreen({Key? key, required this.cafes}) : super(key: key);
 
   @override
@@ -31,13 +32,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
-  }
-
-  void _onSearchBarTap(BuildContext context) async {
-    await showCupertinoModalPopup(
-      context: context,
-      builder: (context) => const SearchScreen(),
-    );
   }
 
   void _onDetailTap() {
@@ -102,48 +96,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         userProfile?.favorites.contains(_selectedCafe?.id) ?? false;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Padding(
-          padding: const EdgeInsets.only(
-            right: Sizes.size14,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: GestureDetector(
-                  onTap: () => _onSearchBarTap(context),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Sizes.size14,
-                      vertical: Sizes.size8,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(),
-                      borderRadius: BorderRadius.circular(Sizes.size20),
-                    ),
-                    child: const Row(
-                      children: [
-                        FaIcon(
-                          FontAwesomeIcons.magnifyingGlass,
-                          size: Sizes.size16,
-                        ),
-                        Gaps.h5,
-                        Text(
-                          '검색',
-                          style: TextStyle(
-                            fontSize: Sizes.size20,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: Stack(
         children: [
           GoogleMap(
@@ -159,8 +111,22 @@ class _MapScreenState extends ConsumerState<MapScreen> {
               });
             },
           ),
+          Positioned(
+              top: 50,
+              left: 20,
+              child: IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                ),
+              )),
           if (_selectedCafe != null)
-            SelectedCafeInfo(selectedCafe: _selectedCafe, isFavorite: isFavorite, onTap: _onDetailTap)
+            SelectedCafeInfo(
+                selectedCafe: _selectedCafe,
+                isFavorite: isFavorite,
+                onTap: _onDetailTap)
         ],
       ),
     );
