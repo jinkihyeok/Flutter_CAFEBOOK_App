@@ -4,6 +4,7 @@ import 'package:caffe_app/features/detailpage/views/detailScreen.dart';
 import 'package:caffe_app/features/detailpage/view_models/cafe_vm.dart';
 import 'package:caffe_app/features/home/views/search_screen.dart';
 import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
+import 'package:caffe_app/features/home/views/widgets/grid_view_builder.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_image.dart';
 import 'package:caffe_app/features/map_page/view_models/user_location_vm.dart';
@@ -161,6 +162,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     });
   }
 
+  void _onMapTap(filteredCafes) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => MapScreen(cafes: filteredCafes),
+      ),
+    );
+  }
+
   Future<void> _onRefresh() async {
     await Future.delayed(const Duration(seconds: 1));
   }
@@ -175,13 +184,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  void _onMapTap(filteredCafes) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => MapScreen(cafes: filteredCafes),
-      ),
-    );
-  }
+  List<Cafe> cafesSortedByLikes = [];
+  List<Cafe> cafesSortedByOpenDate = [];
 
   Future<List<Cafe>> getSortedCafesByDistance(
       WidgetRef ref, List<Cafe> filteredCafes) async {
@@ -194,6 +198,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     cafesWithDistances.sort((a, b) => a.value.compareTo(b.value));
 
     return cafesWithDistances.map((e) => e.key).toList();
+  }
+
+  List<Cafe> getSortedCafesByLikes(List<Cafe> cafes) {
+    List<Cafe> sortedCafes = List.from(cafes);
+    sortedCafes.sort((a, b) => b.likes.compareTo(a.likes));
+    return sortedCafes;
+  }
+
+  List<Cafe> getSortedCafesByOpenDate(List<Cafe> cafes) {
+    List<Cafe> sortedCafes = List.from(cafes);
+    sortedCafes.sort((a, b) => b.openDate.compareTo(a.openDate));
+    return sortedCafes;
   }
 
   @override
@@ -275,7 +291,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               bottom: TabBar(
-                onTap: _onTabBarTap,
+                onTap: (index) {
+                  if (index == 0) {
+                    setState(
+                      () {
+                        cafesSortedByLikes =
+                            getSortedCafesByLikes(filteredCafes);
+                        filteredCafes = cafesSortedByLikes;
+                      },
+                    );
+                  } else if (index == 1) {
+                    setState(
+                      () {
+                        cafesSortedByOpenDate = getSortedCafesByOpenDate(filteredCafes);
+                        filteredCafes = cafesSortedByOpenDate;
+                      },
+                    );
+                  }
+                  _onTabBarTap(index);
+                },
                 padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
                 labelStyle: const TextStyle(
                   fontSize: Sizes.size16,
@@ -306,41 +340,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 } else {
                   return TabBarView(
                     children: [
-                      RefreshIndicator(
-                        color: Colors.black,
-                        onRefresh: _onRefresh,
-                        child: GridView.builder(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size20,
-                            vertical: Sizes.size16,
-                          ),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 1,
-                            mainAxisSpacing: Sizes.size10,
-                            childAspectRatio: 1,
-                          ),
-                          findChildIndexCallback: (key) => null,
-                          itemCount: filteredCafes.length,
-                          controller: _scrollController,
-                          itemBuilder: (context, index) => GestureDetector(
-                            onTap: () => _onDetailTap(filteredCafes[index]),
-                            child: Column(
-                              children: [
-                                SignatureImage(
-                                  imageUri: filteredCafes[index].imageUri,
-                                  id: filteredCafes[index].id,
-                                ),
-                                SignatureDescription(
-                                  cafe: filteredCafes[index],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                      buildGridView(
+                        cafesSortedByLikes,
+                        _onRefresh,
+                        _onDetailTap,
                       ),
-                      Tab(
-                        text: tabs[1],
+                      buildGridView(
+                        cafesSortedByOpenDate,
+                        _onRefresh,
+                        _onDetailTap,
                       ),
                       FutureBuilder<List<Cafe>>(
                         future: getSortedCafesByDistance(ref, filteredCafes),
@@ -348,7 +356,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                              child: CircularProgressIndicator(),
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                              ),
                             );
                           } else if (snapshot.hasError) {
                             return Center(
