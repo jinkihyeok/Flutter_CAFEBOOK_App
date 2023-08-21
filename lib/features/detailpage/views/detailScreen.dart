@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../constants/sizes.dart';
+import '../../../util/calculate_distances.dart';
 import '../models/cafe_model.dart';
 
 class DetailScreen extends ConsumerStatefulWidget {
@@ -83,7 +84,29 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
           ),
           Gaps.v20,
           Text(widget.cafe.name),
+          Text(widget.cafe.location),
           Text(widget.cafe.address),
+          FutureBuilder<int?>(
+            future: calculateDistances(ref, widget.cafe),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  width: Sizes.size12,
+                  height: Sizes.size12,
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                    strokeWidth: 2,
+                  ),
+                );
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData && snapshot.data != null) {
+                return Text('${snapshot.data} km');
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+          ),
           Text('${widget.cafe.openingTime} ~ ${widget.cafe.closingTime}'),
         ],
       ),
