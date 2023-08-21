@@ -1,40 +1,27 @@
+import 'package:caffe_app/features/detailpage/models/cafe_model.dart';
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/util/calculate_distances.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class SignatureDescription extends StatelessWidget {
-  final String name;
-  final String address;
-  final double lat;
-  final double lng;
-  final String openingTime;
-  final String closingTime;
+class SignatureDescription extends ConsumerWidget {
+  final Cafe cafe;
 
   const SignatureDescription({
-    super.key, required this.name, required this.address, required this.openingTime, required this.closingTime, required this.lat, required this.lng,
+    super.key,
+    required this.cafe,
   });
 
-  String extractRegion(String address) {
-    final List<String> keywords = ["읍", "면", "동"];
-    for (var keyword in keywords) {
-      final pattern = RegExp(r"(\S+" + keyword + ")");
-      final match = pattern.firstMatch(address);
-      if (match != null) {
-        return match.group(1)!;
-      }
-    }
-    return "";
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(Sizes.size16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           DefaultTextStyle(
+          DefaultTextStyle(
             style: const TextStyle(
               color: Colors.black,
               fontSize: Sizes.size16,
@@ -45,7 +32,7 @@ class SignatureDescription extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    name,
+                    cafe.name,
                   ),
                 ),
                 const FaIcon(
@@ -70,13 +57,31 @@ class SignatureDescription extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  extractRegion(address),
+                  cafe.location,
+                ),
+                FutureBuilder<int?>(
+                  future: calculateDistances(ref, cafe),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox(
+                        width: Sizes.size12,
+                        height: Sizes.size12,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 2,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData && snapshot.data != null) {
+                      return Text('${snapshot.data} km');
+                    } else {
+                      return const SizedBox.shrink();
+                    }
+                  },
                 ),
                 Text(
-                  '$lat, $lng'
-                ),
-                 Text(
-                  '$openingTime ~ $closingTime',
+                  '${cafe.openingTime} ~ ${cafe.closingTime}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
