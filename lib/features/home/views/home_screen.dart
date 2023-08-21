@@ -6,10 +6,13 @@ import 'package:caffe_app/features/home/views/search_screen.dart';
 import 'package:caffe_app/features/home/views/setting_bar_screen.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_description.dart';
 import 'package:caffe_app/features/home/views/widgets/signature_image.dart';
+import 'package:caffe_app/features/map_page/view_models/user_location_vm.dart';
+import 'package:caffe_app/util/calculate_distances.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:geolocator/geolocator.dart';
 import '../../detailpage/models/cafe_model.dart';
 import '../../map_page/views/map_screen.dart';
 
@@ -86,6 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
+    _getCurrentLocation();
   }
 
   @override
@@ -101,6 +105,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       setState(() {
         _itemCount += 10;
       });
+    }
+  }
+
+  _getCurrentLocation() async {
+    try {
+      Position? position = await getUserLocation();
+      ref.read(userLocationProvider.notifier).state = position;
+      print(position);
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -161,12 +175,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  void _onMapTap() {
+  void _onMapTap(filteredCafes) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => const MapScreen(),
+        builder: (context) => MapScreen(cafes: filteredCafes),
       ),
     );
+  }
+
+  Future<List<Cafe>> getSortedCafesByDistance(
+      WidgetRef ref, List<Cafe> filteredCafes) async {
+    List<MapEntry<Cafe, int>> cafesWithDistances = [];
+
+    for (final cafe in filteredCafes) {
+      int? distance = await calculateDistances(ref, cafe);
+      cafesWithDistances.add(MapEntry(cafe, distance!));
+    }
+    cafesWithDistances.sort((a, b) => a.value.compareTo(b.value));
+
+    return cafesWithDistances.map((e) => e.key).toList();
   }
 
   @override
@@ -305,11 +332,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                                   id: filteredCafes[index].id,
                                 ),
                                 SignatureDescription(
-                                  name: filteredCafes[index].name,
-                                  address: filteredCafes[index].address,
-                                  location: filteredCafes[index].location,
-                                  openingTime: filteredCafes[index].openingTime,
-                                  closingTime: filteredCafes[index].closingTime,
+                                  cafe: filteredCafes[index],
                                 ),
                               ],
                             ),
@@ -319,8 +342,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                       Tab(
                         text: tabs[1],
                       ),
-                      Tab(
-                        text: tabs[2],
+                      FutureBuilder<List<Cafe>>(
+                        future: getSortedCafesByDistance(ref, filteredCafes),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Error: ${snapshot.error}'),
+                            );
+                          } else if (snapshot.hasData) {
+                            final sortedCafes = snapshot.data!;
+                            return GridView.builder(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: Sizes.size20,
+                                vertical: Sizes.size16,
+                              ),
+                              gridDelegate:
+                                  const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 1,
+                                mainAxisSpacing: Sizes.size10,
+                                childAspectRatio: 1,
+                              ),
+                              itemCount: sortedCafes.length,
+                              itemBuilder: (context, index) => GestureDetector(
+                                onTap: () => _onDetailTap(sortedCafes[index]),
+                                child: Column(
+                                  children: [
+                                    SignatureImage(
+                                      imageUri: sortedCafes[index].imageUri,
+                                      id: sortedCafes[index].id,
+                                    ),
+                                    SignatureDescription(
+                                      cafe: sortedCafes[index],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          return const SizedBox.shrink();
+                        },
                       ),
                     ],
                   );
@@ -337,7 +402,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             left: 0,
             right: 0,
             child: GestureDetector(
-              onTap: _onMapTap,
+              onTap: () => _onMapTap(filteredCafes),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
