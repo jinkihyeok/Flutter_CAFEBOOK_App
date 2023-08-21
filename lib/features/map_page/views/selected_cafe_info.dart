@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caffe_app/features/detailpage/models/cafe_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../constants/gaps.dart';
 import '../../../constants/sizes.dart';
+import '../../../util/calculate_distances.dart';
 
-class SelectedCafeInfo extends StatelessWidget {
+class SelectedCafeInfo extends ConsumerWidget {
   final Cafe? selectedCafe;
   final bool isFavorite;
   final VoidCallback onTap;
@@ -19,7 +21,7 @@ class SelectedCafeInfo extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Positioned(
       bottom: Sizes.size80,
       left: 0,
@@ -81,8 +83,29 @@ class SelectedCafeInfo extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Gaps.v20,
-                        Text(selectedCafe!.location),
+                        Expanded(
+                          child: FutureBuilder<int?>(
+                            future: calculateDistances(ref, selectedCafe!),
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return const SizedBox(
+                                  width: Sizes.size12,
+                                  height: Sizes.size12,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                );
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (snapshot.hasData && snapshot.data != null) {
+                                return Text('${selectedCafe!.location}, ${snapshot.data} km');
+                              } else {
+                                return const SizedBox.shrink();
+                              }
+                            },
+                          ),
+                        ),
                         Text(
                             '${selectedCafe!.openingTime} ~ ${selectedCafe!.closingTime}'),
                       ],
