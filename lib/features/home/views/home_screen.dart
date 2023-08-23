@@ -32,44 +32,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     "가까운순",
   ];
 
-  final List<String> locations = [
-    "All",
-    "지정면",
-    "반곡관설동",
-    "단계동",
-    "무실동",
-    "단구동",
-    "행구동",
-    "봉산동",
-    "우산동",
-    "태장1동",
-    "태장2동",
-    "학성동",
-    "일산동",
-    "명륜1동",
-    "명륜2동",
-    "개운동",
-    "원인동",
-    "중앙동",
-    "문막읍",
-    "소초면",
-    "호저면",
-    "부론면",
-    "귀래면",
-    "흥업면",
-    "판부면",
-    "신림면",
-  ];
-
-  int _itemCount = 10;
-
-  final ScrollController _scrollController = ScrollController();
-
   bool _showBarrier = false;
 
-  String selectedLocation = "All";
-
-  String selectedName = "";
+  final ScrollController _scrollController = ScrollController();
 
   late final AnimationController _animationController = AnimationController(
     vsync: this,
@@ -91,6 +56,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     super.initState();
     _scrollController.addListener(_scrollListener);
     _getCurrentLocation();
+    cafesAsyncValue = ref.read(cafesProvider);
+    _updateFilteredCafes();
   }
 
   @override
@@ -103,19 +70,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      setState(() {
-        _itemCount += 10;
-      });
-    }
-  }
-
-  _getCurrentLocation() async {
-    try {
-      Position? position = await getUserLocation();
-      ref.read(userLocationProvider.notifier).state = position;
-      print(position);
-    } catch (e) {
-      print(e);
     }
   }
 
@@ -123,32 +77,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     FocusScope.of(context).unfocus();
   }
 
-  void _onSearchBarTap(BuildContext context) async {
-    final result = await showCupertinoModalPopup(
-      context: context,
-      builder: (context) => const SearchScreen(),
-    );
-
-    if (result != null && locations.contains(result)) {
-      setState(
-        () {
-          selectedLocation = result;
-          selectedName = "";
-        },
-      );
-    } else if (result != null && !locations.contains(result)) {
-      setState(
-        () {
-          selectedLocation = "All";
-          selectedName = result;
-        },
-      );
-    }
-  }
-
   void _onSettingBarTap() {
     _animationController.forward();
-
     setState(() {
       _showBarrier = !_showBarrier;
     });
@@ -156,10 +86,59 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   void _onSettingBarClose() async {
     await _animationController.reverse();
-
     setState(() {
       _showBarrier = !_showBarrier;
     });
+  }
+
+  String selectedLocation = "All";
+  String selectedName = "";
+
+  void _onSearchBarTap(BuildContext context) async {
+    final List<String> locations = [
+      "All",
+      "지정면",
+      "반곡관설동",
+      "단계동",
+      "무실동",
+      "단구동",
+      "행구동",
+      "봉산동",
+      "우산동",
+      "태장1동",
+      "태장2동",
+      "학성동",
+      "일산동",
+      "명륜1동",
+      "명륜2동",
+      "개운동",
+      "원인동",
+      "중앙동",
+      "문막읍",
+      "소초면",
+      "호저면",
+      "부론면",
+      "귀래면",
+      "흥업면",
+      "판부면",
+      "신림면",
+    ];
+    final result = await showCupertinoModalPopup(
+      context: context,
+      builder: (context) => const SearchScreen(),
+    );
+
+    if (result != null) {
+      setState(() {
+        if (locations.contains(result)) {
+          selectedLocation = result;
+          selectedName = "";
+        } else {
+          selectedLocation = "All";
+          selectedName = result;
+        }
+      });
+    }
   }
 
   void _onMapTap(filteredCafes) {
@@ -168,10 +147,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         builder: (context) => MapScreen(cafes: filteredCafes),
       ),
     );
-  }
-
-  Future<void> _onRefresh() async {
-    await Future.delayed(const Duration(seconds: 1));
   }
 
   void _onDetailTap(Cafe selectedCafe) {
@@ -184,8 +159,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     );
   }
 
-  List<Cafe> cafesSortedByLikes = [];
-  List<Cafe> cafesSortedByOpenDate = [];
+  Future<void> _onRefresh() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
+
+  _getCurrentLocation() async {
+    try {
+      Position? position = await getUserLocation();
+      ref.read(userLocationProvider.notifier).state = position;
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  late AsyncValue<List<Cafe>> cafesAsyncValue;
+  List<Cafe> filteredCafes = [];
+
+  void _updateFilteredCafes() {
+    if (cafesAsyncValue is AsyncData<List<Cafe>>) {
+      final cafes = cafesAsyncValue.value;
+
+      if (selectedLocation != 'All') {
+        filteredCafes =
+            cafes!.where((cafe) => cafe.location == selectedLocation).toList();
+      } else {
+        if (selectedName != '') {
+          filteredCafes =
+              cafes!.where((cafe) => cafe.name.contains(selectedName)).toList();
+        } else {
+          filteredCafes = cafes!;
+        }
+      }
+      filteredCafes = getSortedCafesByLikes(filteredCafes);
+    }
+  }
 
   Future<List<Cafe>> getSortedCafesByDistance(
       WidgetRef ref, List<Cafe> filteredCafes) async {
@@ -214,27 +221,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    final cafesAsyncValue = ref.watch(cafesProvider);
-
-    List<Cafe> filteredCafes = [];
-
-    if (cafesAsyncValue is AsyncData<List<Cafe>>) {
-      final cafes = cafesAsyncValue.value;
-
-      if (selectedLocation != 'All') {
-        filteredCafes = cafes.where((cafe) {
-          return cafe.location == selectedLocation;
-        }).toList();
-      } else if (selectedLocation == 'All') {
-        if (selectedName != '') {
-          filteredCafes = cafes.where((cafe) {
-            return cafe.name.contains(selectedName);
-          }).toList();
-        } else {
-          filteredCafes = cafes;
-        }
-      }
-    }
+    cafesAsyncValue = ref.watch(cafesProvider);
+    _updateFilteredCafes();
 
     return DefaultTabController(
       length: tabs.length,
@@ -291,25 +279,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                 ),
               ),
               bottom: TabBar(
-                onTap: (index) {
-                  if (index == 0) {
-                    setState(
-                      () {
-                        cafesSortedByLikes =
-                            getSortedCafesByLikes(filteredCafes);
-                        filteredCafes = cafesSortedByLikes;
-                      },
-                    );
-                  } else if (index == 1) {
-                    setState(
-                      () {
-                        cafesSortedByOpenDate = getSortedCafesByOpenDate(filteredCafes);
-                        filteredCafes = cafesSortedByOpenDate;
-                      },
-                    );
-                  }
-                  _onTabBarTap(index);
-                },
+                onTap: _onTabBarTap,
                 padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
                 labelStyle: const TextStyle(
                   fontSize: Sizes.size16,
@@ -341,12 +311,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                   return TabBarView(
                     children: [
                       buildGridView(
-                        cafesSortedByLikes,
+                        filteredCafes,
                         _onRefresh,
                         _onDetailTap,
                       ),
                       buildGridView(
-                        cafesSortedByOpenDate,
+                        getSortedCafesByOpenDate(filteredCafes),
                         _onRefresh,
                         _onDetailTap,
                       ),
