@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:caffe_app/constants/gaps.dart';
+import 'package:caffe_app/features/detailpage/views/dots_indicator.dart';
 import 'package:caffe_app/features/home/view_models/user_vm.dart';
 import 'package:caffe_app/util/distances_builder.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +20,18 @@ class DetailScreen extends ConsumerStatefulWidget {
 
 class _DetailScreenState extends ConsumerState<DetailScreen> {
   bool isFavorite = false;
+  late PageController _pageController;
+  int _currentPage = 0;
 
   @override
   void initState() {
     super.initState();
     _setupFavoriteStatus();
+    _pageController = PageController()..addListener(() {
+      setState(() {
+        _currentPage = _pageController.page!.round();
+      });
+    });
   }
 
   void _setupFavoriteStatus() async {
@@ -79,14 +87,36 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
       ),
       body: Column(
         children: [
-          SizedBox(
-            width: double.infinity,
-            height: 300,
-            child: CachedNetworkImage(
-              fit: BoxFit.cover,
-              imageUrl: widget.cafe.imageUri,
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-            ),
+          Stack(
+            children: [
+              SizedBox(
+                height: 300,
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: widget.cafe.imageUri.length,
+                  itemBuilder: (context, index) {
+                    return SizedBox(
+                      width: double.infinity,
+                      child: CachedNetworkImage(
+                        fit: BoxFit.cover,
+                        imageUrl: widget.cafe.imageUri[index],
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Positioned(
+                bottom: 10,
+                left: 0,
+                right: 0,
+                child: DotsIndicator(
+                  position: _currentPage,
+                  numberOfDot: widget.cafe.imageUri.length,
+                ),
+              ),
+            ],
           ),
           DefaultTextStyle(
             style: const TextStyle(
