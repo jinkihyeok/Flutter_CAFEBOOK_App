@@ -7,8 +7,9 @@ class Cafe {
   final String location;
   final String openingTime;
   final String closingTime;
-  final String imageUri;
+  final List<String> imageUri;
   final num openDate;
+  final num likes;
 
   Cafe({
     required this.id,
@@ -19,6 +20,7 @@ class Cafe {
     required this.closingTime,
     required this.imageUri,
     required this.openDate,
+    required this.likes,
   });
 
   factory Cafe.fromJson(DocumentSnapshot doc) {
@@ -30,8 +32,9 @@ class Cafe {
       location: data['location'],
       openingTime: data['openingTime'],
       closingTime: data['closingTime'],
-      imageUri: data['imageUri'],
+      imageUri: List<String>.from(data['imageUri']),
       openDate: data['openDate'],
+      likes: data['likes'] ?? 0,
     );
   }
 }
