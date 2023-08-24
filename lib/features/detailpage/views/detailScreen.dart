@@ -88,7 +88,6 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
               errorWidget: (context, url, error) => const Icon(Icons.error),
             ),
           ),
-          Gaps.v20,
           DefaultTextStyle(
             style: const TextStyle(
               color: Colors.black,
@@ -101,11 +100,24 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
+                      children: [
+                        const FaIcon(
+                          FontAwesomeIcons.solidStar,
+                          size: Sizes.size16,
+                        ),
+                        Gaps.h4,
+                        Text(
+                          '${(widget.cafe.likes).toStringAsFixed(1)} / 5',
+                        ),
+                      ],
+                    ),
+                    Gaps.v20,
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        const FaIcon(FontAwesomeIcons.locationDot),
-                        Gaps.h10,
+                        const FaIcon(FontAwesomeIcons.map),
+                        Gaps.h14,
                         Text(widget.cafe.location),
                         const SizedBox(
                           height: 25,
@@ -135,7 +147,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                       mainAxisSize: MainAxisSize.max,
                       children: [
                         const FaIcon(FontAwesomeIcons.clock),
-                        Gaps.h10,
+                        Gaps.h14,
                         Text(
                           '${widget.cafe.openingTime} ~ ${widget.cafe.closingTime}',
                         ),
@@ -282,7 +294,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     ),
                     Gaps.v24,
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: Sizes.size40),
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: Sizes.size40),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         mainAxisSize: MainAxisSize.max,
