@@ -60,6 +60,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
     });
   }
 
+  String get closedDay {
+    if (widget.cafe.closedDay == '') {
+      return '매일';
+    } else {
+      return widget.cafe.closedDay;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -192,8 +200,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             endIndent: 5,
                           ),
                         ),
-                        const Text(
-                          '매주 월요일 휴무',
+                         Text(
+                          closedDay,
                         ),
                       ],
                     ),
@@ -244,7 +252,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               } else {
                                     ScaffoldMessenger.of(context)
                                         .showSnackBar(const SnackBar(
-                                            content: Text('no url')));
+                                            content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -268,7 +276,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               } else {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                    content: Text('no url')));
+                                    content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -292,7 +300,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               } else {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                    content: Text('no url')));
+                                    content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -316,7 +324,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                               } else {
                                 ScaffoldMessenger.of(context)
                                     .showSnackBar(const SnackBar(
-                                    content: Text('no url')));
+                                    content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
