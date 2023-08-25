@@ -1,7 +1,6 @@
 import 'package:caffe_app/features/detailpage/models/cafe_model.dart';
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
-import 'package:caffe_app/util/calculate_distances.dart';
 import 'package:caffe_app/util/distances_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,6 +13,14 @@ class SignatureDescription extends ConsumerWidget {
     super.key,
     required this.cafe,
   });
+
+  String get closedDay {
+    if (cafe.closedDay == '') {
+      return '매일';
+    } else {
+      return cafe.closedDay;
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -62,7 +69,7 @@ class SignatureDescription extends ConsumerWidget {
                 ),
                 DistanceWidget(cafe: cafe),
                 Text(
-                  '${cafe.openingTime} ~ ${cafe.closingTime}',
+                  '${cafe.openingTime} ~ ${cafe.closingTime}  $closedDay',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
