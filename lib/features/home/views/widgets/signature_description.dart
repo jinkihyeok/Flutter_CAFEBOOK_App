@@ -2,6 +2,7 @@ import 'package:caffe_app/features/detailpage/models/cafe_model.dart';
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/util/calculate_distances.dart';
+import 'package:caffe_app/util/distances_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -40,8 +41,8 @@ class SignatureDescription extends ConsumerWidget {
                   size: Sizes.size12,
                 ),
                 Gaps.h3,
-                const Text(
-                  '4.5',
+                 Text(
+                   (cafe.likes).toStringAsFixed(1),
                 ),
               ],
             ),
@@ -59,27 +60,7 @@ class SignatureDescription extends ConsumerWidget {
                 Text(
                   cafe.location,
                 ),
-                FutureBuilder<int?>(
-                  future: calculateDistances(ref, cafe),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox(
-                        width: Sizes.size12,
-                        height: Sizes.size12,
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                          strokeWidth: 2,
-                        ),
-                      );
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else if (snapshot.hasData && snapshot.data != null) {
-                      return Text('${snapshot.data} km');
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  },
-                ),
+                DistanceWidget(cafe: cafe),
                 Text(
                   '${cafe.openingTime} ~ ${cafe.closingTime}',
                   maxLines: 1,
