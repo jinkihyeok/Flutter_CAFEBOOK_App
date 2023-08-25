@@ -10,6 +10,11 @@ class Cafe {
   final List<String> imageUri;
   final num openDate;
   final num likes;
+  final String closedDay;
+  final String? naverUrl;
+  final String? kakaoUrl;
+  final String? googleUrl;
+  final String? instagramUrl;
 
   Cafe({
     required this.id,
@@ -21,6 +26,11 @@ class Cafe {
     required this.imageUri,
     required this.openDate,
     required this.likes,
+    required this.closedDay,
+    this.naverUrl,
+    this.kakaoUrl,
+    this.googleUrl,
+    this.instagramUrl,
   });
 
   factory Cafe.fromJson(DocumentSnapshot doc) {
@@ -35,6 +45,11 @@ class Cafe {
       imageUri: List<String>.from(data['imageUri']),
       openDate: data['openDate'],
       likes: data['likes'] ?? 0,
+      closedDay: data['closedDay'],
+      naverUrl: data['naverUrl'],
+      kakaoUrl: data['kakaoUrl'],
+      googleUrl: data['googleUrl'],
+      instagramUrl: data['instagramUrl'],
     );
   }
 }
