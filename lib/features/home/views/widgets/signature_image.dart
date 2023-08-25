@@ -6,7 +6,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../view_models/user_vm.dart';
 
 class SignatureImage extends ConsumerWidget {
-  final String imageUri;
+  final List<String> imageUri;
   final String id;
 
   const SignatureImage({
@@ -35,7 +35,7 @@ class SignatureImage extends ConsumerWidget {
                 return FadeInImage.assetNetwork(
                   fit: BoxFit.cover,
                   placeholder: "assets/images/morning_coffee.jpeg",
-                  image: imageUri,
+                  image: imageUri[index],
                 );
               },
             ),

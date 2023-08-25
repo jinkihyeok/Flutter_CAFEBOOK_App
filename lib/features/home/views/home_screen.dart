@@ -308,66 +308,69 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
                     ),
                   );
                 } else {
-                  return TabBarView(
-                    children: [
-                      buildGridView(
-                        filteredCafes,
-                        _onRefresh,
-                        _onDetailTap,
-                      ),
-                      buildGridView(
-                        getSortedCafesByOpenDate(filteredCafes),
-                        _onRefresh,
-                        _onDetailTap,
-                      ),
-                      FutureBuilder<List<Cafe>>(
-                        future: getSortedCafesByDistance(ref, filteredCafes),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.black,
-                              ),
-                            );
-                          } else if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Error: ${snapshot.error}'),
-                            );
-                          } else if (snapshot.hasData) {
-                            final sortedCafes = snapshot.data!;
-                            return GridView.builder(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: Sizes.size20,
-                                vertical: Sizes.size16,
-                              ),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 1,
-                                mainAxisSpacing: Sizes.size10,
-                                childAspectRatio: 1,
-                              ),
-                              itemCount: sortedCafes.length,
-                              itemBuilder: (context, index) => GestureDetector(
-                                onTap: () => _onDetailTap(sortedCafes[index]),
-                                child: Column(
-                                  children: [
-                                    SignatureImage(
-                                      imageUri: sortedCafes[index].imageUri,
-                                      id: sortedCafes[index].id,
-                                    ),
-                                    SignatureDescription(
-                                      cafe: sortedCafes[index],
-                                    ),
-                                  ],
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Sizes.size10),
+                    child: TabBarView(
+                      children: [
+                        buildGridView(
+                          filteredCafes,
+                          _onRefresh,
+                          _onDetailTap,
+                        ),
+                        buildGridView(
+                          getSortedCafesByOpenDate(filteredCafes),
+                          _onRefresh,
+                          _onDetailTap,
+                        ),
+                        FutureBuilder<List<Cafe>>(
+                          future: getSortedCafesByDistance(ref, filteredCafes),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.black,
                                 ),
-                              ),
-                            );
-                          }
-                          return const SizedBox.shrink();
-                        },
-                      ),
-                    ],
+                              );
+                            } else if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            } else if (snapshot.hasData) {
+                              final sortedCafes = snapshot.data!;
+                              return GridView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: Sizes.size20,
+                                  vertical: Sizes.size16,
+                                ),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 1,
+                                  mainAxisSpacing: Sizes.size10,
+                                  childAspectRatio: 1,
+                                ),
+                                itemCount: sortedCafes.length,
+                                itemBuilder: (context, index) => GestureDetector(
+                                  onTap: () => _onDetailTap(sortedCafes[index]),
+                                  child: Column(
+                                    children: [
+                                      SignatureImage(
+                                        imageUri: sortedCafes[index].imageUri,
+                                        id: sortedCafes[index].id,
+                                      ),
+                                      SignatureDescription(
+                                        cafe: sortedCafes[index],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink();
+                          },
+                        ),
+                      ],
+                    ),
                   );
                 }
               },
