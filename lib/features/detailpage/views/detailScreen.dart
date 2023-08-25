@@ -6,6 +6,7 @@ import 'package:caffe_app/util/distances_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../constants/sizes.dart';
 import '../models/cafe_model.dart';
 
@@ -27,11 +28,12 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
   void initState() {
     super.initState();
     _setupFavoriteStatus();
-    _pageController = PageController()..addListener(() {
-      setState(() {
-        _currentPage = _pageController.page!.round();
+    _pageController = PageController()
+      ..addListener(() {
+        setState(() {
+          _currentPage = _pageController.page!.round();
+        });
       });
-    });
   }
 
   void _setupFavoriteStatus() async {
@@ -234,7 +236,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                         mainAxisSize: MainAxisSize.max,
                         children: [
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              if (widget.cafe.naverUrl != null) {
+                                await launchUrl(
+                                  Uri.parse(widget.cafe.naverUrl!),
+                                );
+                              } else {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                            content: Text('no url')));
+                              }
+                            },
                             child: Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -248,7 +260,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              if (widget.cafe.kakaoUrl != null) {
+                                await launchUrl(
+                                  Uri.parse(widget.cafe.kakaoUrl!),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                    content: Text('no url')));
+                              }
+                            },
                             child: Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -256,13 +278,23 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                     BorderRadius.circular(Sizes.size12),
                               ),
                               child: Image.asset(
-                                'assets/icons/logo_daum.png',
+                                'assets/icons/logo_kakao_map.png',
                                 scale: 0.6,
                               ),
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              if (widget.cafe.googleUrl != null) {
+                                await launchUrl(
+                                  Uri.parse(widget.cafe.googleUrl!),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                    content: Text('no url')));
+                              }
+                            },
                             child: Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -276,7 +308,17 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             ),
                           ),
                           GestureDetector(
-                            onTap: () {},
+                            onTap: () async {
+                              if (widget.cafe.instagramUrl!= null) {
+                                await launchUrl(
+                                  Uri.parse(widget.cafe.instagramUrl!),
+                                );
+                              } else {
+                                ScaffoldMessenger.of(context)
+                                    .showSnackBar(const SnackBar(
+                                    content: Text('no url')));
+                              }
+                            },
                             child: Container(
                               clipBehavior: Clip.antiAlias,
                               decoration: BoxDecoration(
@@ -292,89 +334,15 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                         ],
                       ),
                     ),
-                    Gaps.v48,
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: Sizes.size40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 1,
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                          ),
-                          const Padding(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: Sizes.size16),
-                            child: Text(
-                              "M A P",
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                          ),
-                          Expanded(
-                            child: Container(
-                              height: 1,
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
                     Gaps.v24,
                     Padding(
                       padding:
                           const EdgeInsets.symmetric(horizontal: Sizes.size40),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Sizes.size12),
-                              ),
-                              child: Image.asset(
-                                'assets/icons/logo_naver_map.png',
-                                scale: 0.6,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Sizes.size12),
-                              ),
-                              child: Image.asset(
-                                'assets/icons/logo_kakao_map.png',
-                                scale: 0.6,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {},
-                            child: Container(
-                              clipBehavior: Clip.antiAlias,
-                              decoration: BoxDecoration(
-                                borderRadius:
-                                    BorderRadius.circular(Sizes.size12),
-                              ),
-                              child: Image.asset(
-                                'assets/icons/logo_google_map.png',
-                                scale: 0.6,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: Container(
+                        height: 1,
+                        color: Colors.black.withOpacity(0.5),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),
