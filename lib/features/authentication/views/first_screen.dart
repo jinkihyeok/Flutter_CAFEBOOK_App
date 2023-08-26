@@ -36,7 +36,7 @@ class FirstScreen extends StatelessWidget {
             children: [
               Gaps.v80,
               const Text(
-                'SENECA',
+                'CAFEBOOK',
                 style: TextStyle(
                   fontSize: Sizes.size32,
                   fontWeight: FontWeight.w700,
@@ -55,10 +55,10 @@ class FirstScreen extends StatelessWidget {
               const Expanded(child: SizedBox()),
               GestureDetector(
                 onTap: () => _onStartTap(context),
-                child: AuthButton(
+                child: const AuthButton(
                   text: "시작하기",
                   color: Colors.white,
-                  backgroundColor: Theme.of(context).primaryColor,
+                  backgroundColor: Colors.blue,
                 ),
               ),
             ],

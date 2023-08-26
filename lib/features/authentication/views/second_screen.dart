@@ -47,15 +47,15 @@ class SecondScreen extends ConsumerWidget {
               ),
               Gaps.v16,
               AuthButton(
-                text: '카카오로 계속하기',
-                color: Colors.black,
+                text: '카카오 로그인',
+                color: Colors.white,
                 backgroundColor: const Color(0xFFFFCD00),
                 icon: Image.asset('assets/icons/kakao.png'),
               ),
               Gaps.v12,
               AuthButton(
-                text: '네이버로 계속하기',
-                color: Colors.black,
+                text: '네이버로 로그인',
+                color: Colors.white,
                 backgroundColor: const Color(0xFF03C75A),
                 icon: Image.asset('assets/icons/naver.png'),
               ),
@@ -63,7 +63,7 @@ class SecondScreen extends ConsumerWidget {
               GestureDetector(
                 onTap: () => ref.read(socialAuthProvider.notifier).googleLogin(context),
                 child: AuthButton(
-                  text: '구글로 계속하기',
+                  text: '구글로 로그인',
                   color: Colors.black,
                   backgroundColor: Colors.white,
                   icon: Image.asset('assets/icons/google.png'),
@@ -79,7 +79,7 @@ class SecondScreen extends ConsumerWidget {
               GestureDetector(
                 onTap: () => _onEmailTap(context),
                 child: const AuthButton(
-                  text: '이메일로 계속하기',
+                  text: '이메일 로그인',
                   color: Colors.white,
                   backgroundColor: Color(0xFF051010),
                 ),
