@@ -25,6 +25,29 @@ class AuthenticationRepository {
     );
   }
 
+  var acs = ActionCodeSettings(
+    url: "https://caffeapp.page.link",
+    handleCodeInApp: true,
+    iOSBundleId: "com.example.caffeApp",
+    androidPackageName: "com.example.caffe_app",
+    androidInstallApp: true,
+    androidMinimumVersion: "16",
+  );
+
+  Future<void> sendSignInLink(String email) async {
+    try {
+      await _firebaseAuth.sendSignInLinkToEmail(email: email, actionCodeSettings: acs);
+      print('Successfully sent email verification');
+    } catch (error) {
+      if (error is FirebaseAuthException) {
+        print('Error Code: ${error.code}');
+        print('Error Message: ${error.message}');
+      } else {
+        print('An unexpected error occurred: $error');
+      }
+    }
+  }
+
   Future<UserCredential> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
