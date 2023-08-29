@@ -2,6 +2,7 @@ import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/view_models/signup_vm.dart';
 import 'package:caffe_app/features/authentication/views/auth_number_screen.dart';
+import 'package:caffe_app/features/authentication/views/password_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -48,13 +49,15 @@ class _EmailScreenState extends ConsumerState<EmailScreen> {
     FocusScope.of(context).unfocus();
   }
 
-  void _onSubmitTap() {
+  void _onSubmitTap() async {
     if (_email.isEmpty || _isEmailValid() != null) return;
-    ref.read(signUpForm.notifier).state = {"email": _email};
+    final state = ref.read(signUpForm.notifier).state;
+    ref.read(signUpForm.notifier).state = {...state, "email": _email};
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AuthNumberScreen(email: _email),
+        builder: (context) => PasswordScreen(email: _email),
       ),
     );
   }

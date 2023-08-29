@@ -1,5 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/authentication/views/email_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,9 +41,13 @@ class _UserNameScreenState extends ConsumerState<UserNameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    final state = ref.read(signUpForm.notifier).state;
-    ref.read(signUpForm.notifier).state = {...state, "username": _username};
-    ref.read(signUpProvider.notifier).emailSignUp(context);
+    ref.read(signUpForm.notifier).state = {"username": _username};
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const EmailScreen(),
+      ),
+    );
   }
 
   bool _isKoreanInput() {
@@ -56,13 +61,16 @@ class _UserNameScreenState extends ConsumerState<UserNameScreen> {
       onTap: _onScafoldTap,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gaps.v80,
+                Gaps.v40,
                 const Text(
                   '반가워요.\n이름을 알려주세요.',
                   style: TextStyle(
@@ -95,11 +103,14 @@ class _UserNameScreenState extends ConsumerState<UserNameScreen> {
                   onTap: _onNextTap,
                   child: AuthButton(
                     text: '시작하기',
-                    backgroundColor: _username.isEmpty || ref.watch(signUpProvider).isLoading
-                        ? Colors.grey.shade300
-                        : Theme.of(context).primaryColor,
+                    backgroundColor:
+                        _username.isEmpty || ref.watch(signUpProvider).isLoading
+                            ? Colors.grey.shade300
+                            : Theme.of(context).primaryColor,
                     color:
-                        _username.isEmpty || ref.watch(signUpProvider).isLoading ? Colors.grey.shade400 : Colors.white,
+                        _username.isEmpty || ref.watch(signUpProvider).isLoading
+                            ? Colors.grey.shade400
+                            : Colors.white,
                   ),
                 ),
               ],

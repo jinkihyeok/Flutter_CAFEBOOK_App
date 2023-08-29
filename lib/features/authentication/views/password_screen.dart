@@ -60,17 +60,26 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
 
   void _onSubmitTap() async {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
+
     final state = ref.read(signUpForm.notifier).state;
     ref.read(signUpForm.notifier).state = {...state, "password": _password};
+
+    await ref.read(signUpProvider.notifier).emailSignUp();
+
     setState(() {
       _isLoading = true;
     });
-    Navigator.push(
+
+   await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => const EmailVerificationScreen(),
       ),
     );
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   void _onClearTap() {
@@ -88,13 +97,16 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
       onTap: _onScafoldTap,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: Sizes.size20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Gaps.v80,
+                Gaps.v40,
                 const Text(
                   '비밀번호를\n설정해주세요.',
                   style: TextStyle(
