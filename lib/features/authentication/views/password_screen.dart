@@ -1,5 +1,6 @@
 import 'package:caffe_app/constants/gaps.dart';
 import 'package:caffe_app/constants/sizes.dart';
+import 'package:caffe_app/features/authentication/views/email_verification_screen.dart';
 import 'package:caffe_app/features/authentication/views/username_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +10,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../view_models/signup_vm.dart';
 
 class PasswordScreen extends ConsumerStatefulWidget {
-  static const routeName = 'passwordScreen';
-  static const routeURL = '/password';
-  const PasswordScreen({super.key});
+  final String email;
+
+  const PasswordScreen({
+    super.key,
+    required this.email,
+  });
 
   @override
   ConsumerState<PasswordScreen> createState() => _PasswordScreenState();
@@ -22,6 +26,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
 
   String _password = '';
   bool _obscureText = true;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -53,14 +58,17 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
     FocusScope.of(context).unfocus();
   }
 
-  void _onSubmitTap() {
+  void _onSubmitTap() async {
     if (!_isPasswordLengthValid() || !_isPasswordValid()) return;
     final state = ref.read(signUpForm.notifier).state;
     ref.read(signUpForm.notifier).state = {...state, "password": _password};
+    setState(() {
+      _isLoading = true;
+    });
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const UserNameScreen(),
+        builder: (context) => const EmailVerificationScreen(),
       ),
     );
   }
@@ -92,6 +100,14 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
                   style: TextStyle(
                     fontSize: Sizes.size28,
                     fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Gaps.v10,
+                Text(
+                  widget.email,
+                  style: const TextStyle(
+                    fontSize: Sizes.size16,
+                    color: Colors.black54,
                   ),
                 ),
                 Gaps.v16,
@@ -184,7 +200,7 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
                 Gaps.v28,
                 GestureDetector(
                   onTap: _onSubmitTap,
-                  child: AuthButton(
+                  child: !_isLoading ? AuthButton(
                     text: '다음',
                     backgroundColor:
                         !_isPasswordLengthValid() || !_isPasswordValid()
@@ -193,6 +209,8 @@ class _PasswordScreenState extends ConsumerState<PasswordScreen> {
                     color: !_isPasswordLengthValid() || !_isPasswordValid()
                         ? Colors.grey.shade400
                         : Colors.white,
+                  ) : const Center(
+                    child: CircularProgressIndicator(color: Colors.black,),
                   ),
                 ),
               ],
