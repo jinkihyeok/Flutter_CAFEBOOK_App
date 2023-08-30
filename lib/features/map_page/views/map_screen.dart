@@ -5,14 +5,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../../../constants/gaps.dart';
-import '../../../constants/sizes.dart';
 import '../../detailpage/models/cafe_model.dart';
 import '../../detailpage/views/detailScreen.dart';
 import '../../home/view_models/user_vm.dart';
-import '../../home/views/search_screen.dart';
+import '../view_models/user_location_vm.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   final List<Cafe> cafes;
@@ -99,6 +96,10 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            padding: EdgeInsets.only(
+              right: 20,
+              bottom: _selectedCafe != null ? 200 : 30,
+            ),
             onMapCreated: _onMapCreated,
             markers: _markers,
             initialCameraPosition: CameraPosition(
@@ -110,6 +111,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 _selectedCafe = null;
               });
             },
+            myLocationEnabled: true,
           ),
           Positioned(
               top: 50,
