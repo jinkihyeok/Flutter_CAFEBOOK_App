@@ -45,11 +45,11 @@ class Cafe {
       imageUri: List<String>.from(data['imageUri']),
       openDate: data['openDate'],
       likes: data['likes'] ?? 0,
-      closedDay: data['closedDay'],
-      naverUrl: data['naverUrl'],
-      kakaoUrl: data['kakaoUrl'],
-      googleUrl: data['googleUrl'],
-      instagramUrl: data['instagramUrl'],
+      closedDay: data['closedDay'] ?? '',
+      naverUrl: data['naverUrl'] ?? '',
+      kakaoUrl: data['kakaoUrl'] ?? '',
+      googleUrl: data['googleUrl'] ?? '',
+      instagramUrl: data['instagramUrl'] ?? '',
     );
   }
 }
