@@ -3,6 +3,8 @@ import 'package:caffe_app/constants/sizes.dart';
 import 'package:caffe_app/features/authentication/view_models/agree_vm.dart';
 import 'package:caffe_app/features/authentication/views/agree_screen.dart';
 import 'package:caffe_app/features/authentication/views/email_screen.dart';
+import 'package:caffe_app/features/authentication/views/email_screen_for_reset.dart';
+import 'package:caffe_app/features/authentication/views/username_screen.dart';
 import 'package:caffe_app/features/authentication/views/widgets/auth_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -41,7 +43,7 @@ class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
 
   void _onSignUpTap() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => const EmailScreen(),
+      builder: (context) => const UserNameScreen(),
     ));
   }
 
@@ -71,9 +73,7 @@ class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
 
   void _onFindTap() {
     Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => AgreeScreen(
-        viewModel: provider.Provider.of<AgreeViewModel>(context),
-      ),
+      builder: (context) => const EmailScreenForReset(),
     ));
   }
 
