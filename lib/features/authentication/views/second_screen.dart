@@ -23,8 +23,8 @@ class SecondScreen extends ConsumerWidget {
       body: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(
-          horizontal: Sizes.size20,
-          vertical: Sizes.size28,
+          horizontal: Sizes.size40,
+          vertical: Sizes.size60,
         ),
         decoration: const BoxDecoration(
           image: DecorationImage(
@@ -46,20 +46,6 @@ class SecondScreen extends ConsumerWidget {
                 ),
               ),
               Gaps.v16,
-              AuthButton(
-                text: '카카오 로그인',
-                color: Colors.white,
-                backgroundColor: const Color(0xFFFFCD00),
-                icon: Image.asset('assets/icons/kakao.png'),
-              ),
-              Gaps.v12,
-              AuthButton(
-                text: '네이버로 로그인',
-                color: Colors.white,
-                backgroundColor: const Color(0xFF03C75A),
-                icon: Image.asset('assets/icons/naver.png'),
-              ),
-              Gaps.v12,
               GestureDetector(
                 onTap: () => ref.read(socialAuthProvider.notifier).googleLogin(context),
                 child: AuthButton(
@@ -81,7 +67,7 @@ class SecondScreen extends ConsumerWidget {
                 child: const AuthButton(
                   text: '이메일 로그인',
                   color: Colors.white,
-                  backgroundColor: Color(0xFF051010),
+                  backgroundColor: Colors.blue,
                 ),
               ),
             ],
