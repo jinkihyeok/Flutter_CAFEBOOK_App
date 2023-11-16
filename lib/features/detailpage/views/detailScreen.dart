@@ -131,7 +131,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
           DefaultTextStyle(
             style: const TextStyle(
               color: Colors.black,
-              fontSize: Sizes.size16,
+              fontSize: Sizes.size18,
             ),
             child: Expanded(
               child: Padding(
@@ -154,31 +154,32 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                     Gaps.v20,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
                         const FaIcon(FontAwesomeIcons.map),
                         Gaps.h14,
-                        Text(widget.cafe.location),
-                        const SizedBox(
-                          height: 25,
-                          child: VerticalDivider(
-                            color: Colors.grey,
-                            thickness: 1,
-                            indent: 5,
-                            endIndent: 5,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(widget.cafe.location),
+                                const SizedBox(
+                                  height: 25,
+                                  child: VerticalDivider(
+                                    color: Colors.grey,
+                                    thickness: 1,
+                                    indent: 5,
+                                    endIndent: 5,
+                                  ),
+                                ),
+                                DistanceWidget(cafe: widget.cafe),
+                              ],
+                            ),
+                            Text(widget.cafe.address),
+                          ],
                         ),
-                        DistanceWidget(cafe: widget.cafe),
-                        const SizedBox(
-                          height: 25,
-                          child: VerticalDivider(
-                            color: Colors.grey,
-                            thickness: 1,
-                            indent: 5,
-                            endIndent: 5,
-                          ),
-                        ),
-                        Text(widget.cafe.address),
                       ],
                     ),
                     Gaps.v16,
@@ -200,7 +201,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                             endIndent: 5,
                           ),
                         ),
-                         Text(
+                        Text(
                           closedDay,
                         ),
                       ],
@@ -250,9 +251,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                   Uri.parse(widget.cafe.naverUrl!),
                                 );
                               } else {
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(const SnackBar(
-                                            content: Text('페이지가 존재하지 않습니다.')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -274,9 +275,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                   Uri.parse(widget.cafe.kakaoUrl!),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                    content: Text('페이지가 존재하지 않습니다.')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -298,9 +299,9 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                   Uri.parse(widget.cafe.googleUrl!),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                    content: Text('페이지가 존재하지 않습니다.')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
@@ -317,14 +318,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              if (widget.cafe.instagramUrl!= null) {
+                              if (widget.cafe.instagramUrl != null) {
                                 await launchUrl(
                                   Uri.parse(widget.cafe.instagramUrl!),
                                 );
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                    content: Text('페이지가 존재하지 않습니다.')));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text('페이지가 존재하지 않습니다.')));
                               }
                             },
                             child: Container(
