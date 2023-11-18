@@ -1,17 +1,5 @@
-# caffe_app
+# CAFEBOOK
 
-A new Flutter project.
+- 내 지역 카페들을 인기순 / 신규순 / 가까운순으로 정렬해 카페 정보를 제공해주는 앱
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# flutter_caffeApp
+## 주요 구현 기능
